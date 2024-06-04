@@ -1,6 +1,9 @@
 package com.prac.music.domain.user.entity;
 
 import com.prac.music.domain.user.dto.SignupRequestDto;
+import com.prac.music.domain.user.dto.ProfileRequestDto;
+import io.micrometer.common.util.StringUtils;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,7 +43,20 @@ public class User extends BaseTimeEntity{
     public User(SignupRequestDto requestDto) {
         this.userId = requestDto.getUserId();
         this.name = requestDto.getName();
+        this.email = requestDto.getEmail();
+        this.password = requestDto.getPassword();
         this.intro = requestDto.getIntro();
         this.userStatusEnum = UserStatusEnum.NORMAL;
+  }
+
+   
+    public void update(ProfileRequestDto requestDto) {
+        this.name = requestDto.getName();
+        this.email = requestDto.getEmail();
+        this.intro = requestDto.getIntro();
+        // 비밀번호가 비어있지 않은 경우에만 업데이트
+        if (StringUtils.isNotBlank(requestDto.getNewPassword())) {
+            this.password = requestDto.getNewPassword();
+        }
     }
 }

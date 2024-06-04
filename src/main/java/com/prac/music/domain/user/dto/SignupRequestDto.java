@@ -18,7 +18,6 @@ public class SignupRequestDto {
 
     private String name;
 
-    @Email
     private String email;
 
     private String intro;
