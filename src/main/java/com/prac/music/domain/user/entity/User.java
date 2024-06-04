@@ -1,10 +1,12 @@
 package com.prac.music.domain.user.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Data
 @Table(name = "user")
 public class User {
     @Id
@@ -37,4 +39,8 @@ public class User {
 
     @Column(nullable = false, name = "deletedAt")
     private LocalDateTime deletedAt;
+
+    public boolean isAdmin() {
+        return this.userStatusEnum == UserStatusEnum.SECESSION
+    }
 }
