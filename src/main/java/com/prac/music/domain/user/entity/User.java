@@ -11,6 +11,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false, name = "userid")
+    private String userId;
+
     @Column(unique = true, nullable = false, name = "email")
     private String email;
 
@@ -30,7 +33,7 @@ public class User {
     private String refreshToken;
 
     @Column(nullable = false, name = "createdAt")
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false, name = "updatedAt")
     private LocalDateTime updatedAt;
