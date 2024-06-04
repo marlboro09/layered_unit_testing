@@ -17,7 +17,7 @@ import com.prac.music.domain.board.dto.BoardRequestDto;
 import com.prac.music.domain.board.dto.BoardResponseDto;
 import com.prac.music.domain.board.dto.UpdateRequestDto;
 import com.prac.music.domain.board.service.BoardService;
-import com.prac.music.domain.user.security.UserDetailsImpl;
+import com.prac.music.security.UserDetailsImpl;
 
 import jakarta.validation.Valid;
 
