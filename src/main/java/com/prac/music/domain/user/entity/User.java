@@ -41,6 +41,6 @@ public class User {
     private LocalDateTime deletedAt;
 
     public boolean isAdmin() {
-        return this.userStatusEnum == UserStatusEnum.SECESSION
+        return this.userStatusEnum == UserStatusEnum.SECESSION;
     }
 }

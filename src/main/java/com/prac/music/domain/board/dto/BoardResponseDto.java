@@ -20,8 +20,8 @@ public class BoardResponseDto {
 
 	public BoardResponseDto(Board board) {
 		this.boardId = board.getId();
-        this.userId = board.getUser().getId();
-        this.contents = board.getContents();
-        this.createdAt = board.getCreatedAt();
+		this.userId = board.getUser().getId();
+		this.contents = board.getContents();
+		this.createdAt = board.getCreateAt();
 	}
 }
