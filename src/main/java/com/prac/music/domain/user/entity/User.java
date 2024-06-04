@@ -1,7 +1,6 @@
 package com.prac.music.domain.user.entity;
 
-import com.prac.music.domain.user.dto.ProfileRequestDto;
-import io.micrometer.common.util.StringUtils;
+import com.prac.music.domain.user.dto.SignupRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +9,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@NoArgsConstructor
 @Table(name = "user")
-public class User {
+@NoArgsConstructor
+public class User extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,22 +37,10 @@ public class User {
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    @Column(nullable = false, name = "createdAt")
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false, name = "updatedAt")
-    private LocalDateTime updatedAt;
-
-    @Column(nullable = false, name = "deletedAt")
-    private LocalDateTime deletedAt;
-
-    public void update(ProfileRequestDto requestDto) {
+    public User(SignupRequestDto requestDto) {
+        this.userId = requestDto.getUserId();
         this.name = requestDto.getName();
-        this.email = requestDto.getEmail();
         this.intro = requestDto.getIntro();
-        // 비밀번호가 비어있지 않은 경우에만 업데이트
-        if (StringUtils.isNotBlank(requestDto.getNewPassword())) {
-            this.password = requestDto.getNewPassword();
-        }
+        this.userStatusEnum = UserStatusEnum.NORMAL;
     }
 }
