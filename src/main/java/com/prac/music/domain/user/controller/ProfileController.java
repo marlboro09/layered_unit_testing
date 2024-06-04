@@ -1,13 +1,12 @@
 package com.prac.music.domain.user.controller;
 
+import com.prac.music.domain.user.dto.ProfileRequestDto;
 import com.prac.music.domain.user.dto.ProfileResponseDto;
 import com.prac.music.domain.user.service.ProfileService;
 import lombok.RequiredArgsConstructor;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,4 +27,9 @@ public class ProfileController {
         return ResponseEntity.ok(responseDto);
     }
 
+    @PutMapping
+    public ResponseEntity<String> updateProfile(@PathVariable String userId, @RequestBody @Valid ProfileRequestDto requestDto) {
+        String message = profileService.updateProfile(userId, requestDto);
+        return ResponseEntity.ok(message);
+    }
 }
