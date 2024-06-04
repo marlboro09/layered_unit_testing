@@ -5,12 +5,14 @@ import com.prac.music.domain.user.dto.ProfileRequestDto;
 import io.micrometer.common.util.StringUtils;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Data
 @Getter
 @Table(name = "user")
 @NoArgsConstructor
@@ -40,6 +42,9 @@ public class User extends BaseTimeEntity{
     @Column(name = "refresh_token")
     private String refreshToken;
 
+
+    public boolean isAdmin() {
+        return this.userStatusEnum == UserStatusEnum.SECESSION;
     public User(SignupRequestDto requestDto) {
         this.userId = requestDto.getUserId();
         this.name = requestDto.getName();
