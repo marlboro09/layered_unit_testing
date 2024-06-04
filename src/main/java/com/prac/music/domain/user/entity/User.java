@@ -40,6 +40,8 @@ public class User extends BaseTimeEntity{
     public User(SignupRequestDto requestDto) {
         this.userId = requestDto.getUserId();
         this.name = requestDto.getName();
+        this.email = requestDto.getEmail();
+        this.password = requestDto.getPassword();
         this.intro = requestDto.getIntro();
         this.userStatusEnum = UserStatusEnum.NORMAL;
     }
