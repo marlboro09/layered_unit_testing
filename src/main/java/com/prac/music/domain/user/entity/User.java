@@ -1,5 +1,7 @@
 package com.prac.music.domain.user.entity;
 
+import com.prac.music.domain.user.dto.ProfileRequestDto;
+import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,11 +39,21 @@ public class User {
     private String refreshToken;
 
     @Column(nullable = false, name = "createdAt")
-    private LocalDateTime createdAt;
+    private LocalDateTime createAt;
 
     @Column(nullable = false, name = "updatedAt")
     private LocalDateTime updatedAt;
 
     @Column(nullable = false, name = "deletedAt")
     private LocalDateTime deletedAt;
+
+    public void update(ProfileRequestDto requestDto) {
+        this.name = requestDto.getName();
+        this.email = requestDto.getEmail();
+        this.intro = requestDto.getIntro();
+        // 비밀번호가 비어있지 않은 경우에만 업데이트
+        if (StringUtils.isNotBlank(requestDto.getNewPassword())) {
+            this.password = requestDto.getNewPassword();
+        }
+    }
 }
