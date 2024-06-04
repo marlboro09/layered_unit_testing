@@ -38,18 +38,20 @@ public class JwtUtil {
     }
 
     // 토큰 생성
-    public String createToken(String userId, UserStatusEnum role) {
+    public String createToken(String userId, UserStatusEnum status) {
         Date date = new Date();
 
-        Claims claims = Jwts.claims().setSubject(userId);
-        claims.put("roles", role);
+//        Claims claims = Jwts.claims().setSubject(userId);
+//        claims.put("roles", status);
 
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(date)
-                .setExpiration(new Date(date.getTime() + TOKEN_TIME))
-                .signWith(SignatureAlgorithm.ES256, secretKey)
-                .compact();
+        return BEARER_PREFIX +
+                Jwts.builder()
+                        .setSubject(userId)
+                        .claim(AUTHORIZATION_KEY, status)
+                        .setIssuedAt(date)
+                        .setExpiration(new Date(date.getTime() + TOKEN_TIME))
+                        .signWith(key, signatureAlgorithm)
+                        .compact();
     }
 
     // header 에서 JWT 가져오기
