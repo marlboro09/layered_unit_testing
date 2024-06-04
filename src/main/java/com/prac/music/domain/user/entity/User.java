@@ -30,7 +30,7 @@ public class User {
     private String refreshToken;
 
     @Column(nullable = false, name = "createdAt")
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false, name = "updatedAt")
     private LocalDateTime updatedAt;
