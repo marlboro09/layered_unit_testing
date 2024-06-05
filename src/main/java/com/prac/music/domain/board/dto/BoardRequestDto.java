@@ -6,13 +6,10 @@ import lombok.Getter;
 @Getter
 public class BoardRequestDto {
 
-	private Long boardId;
-
 	private String contents;
 
 	@Builder
-	public BoardRequestDto(Long boardId, String contents) {
-		this.boardId = boardId;
+	public BoardRequestDto(String contents) {
 		this.contents = contents;
 	}
 }
