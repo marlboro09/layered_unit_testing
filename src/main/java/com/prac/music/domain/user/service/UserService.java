@@ -5,8 +5,12 @@ import com.prac.music.domain.user.dto.LoginResponseDto;
 import com.prac.music.domain.user.dto.SignupRequestDto;
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.repsitory.UserRepository;
-import com.prac.music.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,9 +20,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final JwtService jwtService;
 
     public User createUser(SignupRequestDto requestDto) {
         String userId = requestDto.getUserId();
@@ -36,16 +41,17 @@ public class UserService {
     }
 
     public LoginResponseDto loginUser(@RequestBody LoginRequestDto requestDto){
-        User user = userRepository.findByUserId(requestDto.getUserId()).orElseThrow(
-                () -> new IllegalArgumentException("아이디를 다시 확인해 주세요")
+        User user = this.userRepository.findByUserId(requestDto.getUserId()).orElseThrow(
+                () -> new UsernameNotFoundException("아이디를 다시 확인해주세요")
         );
 
-        if(!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())){
-            throw new IllegalArgumentException("비밀번호를 다시 확인해주세요");
-        }
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(requestDto.getUserId(),
+                        requestDto.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String token = jwtUtil.createToken(user.getUserId(), user.getUserStatusEnum());
+        String token = jwtService.createToken(requestDto.getUserId());
+        return new LoginResponseDto(token, "로그인에 성공했습니다.");
 
-        return new LoginResponseDto(user, token);
     }
 }

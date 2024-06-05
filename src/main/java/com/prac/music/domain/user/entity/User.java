@@ -45,7 +45,6 @@ public class User extends BaseTimeEntity {
 
     public boolean isAdmin() {
         return this.userStatusEnum == UserStatusEnum.SECESSION;
-
     }
 
     public User(SignupRequestDto requestDto) {
