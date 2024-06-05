@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @Getter
@@ -40,27 +42,26 @@ public class User extends BaseTimeEntity{
     @Column(name = "refresh_token")
     private String refreshToken;
 
+	public boolean isAdmin() {
+		return this.userStatusEnum == UserStatusEnum.SECESSION;
+	}
 
-    public boolean isAdmin() {
-        return this.userStatusEnum == UserStatusEnum.SECESSION;
-  }
+	public User(SignupRequestDto requestDto) {
+		this.userId = requestDto.getUserId();
+		this.name = requestDto.getName();
+		this.email = requestDto.getEmail();
+		this.password = requestDto.getPassword();
+		this.intro = requestDto.getIntro();
+		this.userStatusEnum = UserStatusEnum.NORMAL;
+	}
 
-    public User(SignupRequestDto requestDto) {
-        this.userId = requestDto.getUserId();
-        this.name = requestDto.getName();
-        this.email = requestDto.getEmail();
-        this.password = requestDto.getPassword();
-        this.intro = requestDto.getIntro();
-        this.userStatusEnum = UserStatusEnum.NORMAL;
-    }
-   
-    public void update(ProfileRequestDto requestDto) {
-        this.name = requestDto.getName();
-        this.email = requestDto.getEmail();
-        this.intro = requestDto.getIntro();
-        // 비밀번호가 비어있지 않은 경우에만 업데이트
-        if (StringUtils.isNotBlank(requestDto.getNewPassword())) {
-            this.password = requestDto.getNewPassword();
-        }
-    }
+	public void update(ProfileRequestDto requestDto) {
+		this.name = requestDto.getName();
+		this.email = requestDto.getEmail();
+		this.intro = requestDto.getIntro();
+		// 비밀번호가 비어있지 않은 경우에만 업데이트
+		if (StringUtils.isNotBlank(requestDto.getNewPassword())) {
+			this.password = requestDto.getNewPassword();
+		}
+	}
 }
