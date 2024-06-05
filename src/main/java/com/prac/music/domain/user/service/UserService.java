@@ -52,6 +52,5 @@ public class UserService {
 
         String token = jwtService.createToken(requestDto.getUserId());
         return new LoginResponseDto(token, "로그인에 성공했습니다.");
-
     }
 }
