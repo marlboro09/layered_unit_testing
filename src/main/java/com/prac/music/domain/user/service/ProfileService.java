@@ -25,12 +25,12 @@ public class ProfileService {
     // 유저 프로필 수정
     @Transactional
     public String updateProfile(ProfileRequestDto requestDto, User user) {
-        User getuser = findUserById(user.getUserId());
+        User getUser = findUserById(user.getUserId());
 
         // Dto 에 비밀번호가 들어왔을 경우
-        validatePassword(requestDto.getPassword(), requestDto.getNewPassword(), getuser.getPassword());
+        validatePassword(requestDto.getPassword(), requestDto.getNewPassword(), getUser.getPassword());
 
-        getuser.update(requestDto);
+        getUser.update(requestDto);
         return "프로필이 수정되었습니다.";
     }
 
