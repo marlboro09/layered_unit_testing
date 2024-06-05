@@ -3,7 +3,6 @@ package com.prac.music.domain.user.entity;
 import com.prac.music.domain.user.dto.ProfileRequestDto;
 import com.prac.music.domain.user.dto.SignupRequestDto;
 
-import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -62,9 +61,12 @@ public class User extends BaseTimeEntity {
 		this.name = requestDto.getName();
 		this.email = requestDto.getEmail();
 		this.intro = requestDto.getIntro();
-		// 비밀번호가 비어있지 않은 경우에만 업데이트
-		if (StringUtils.isNotBlank(requestDto.getNewPassword())) {
-			this.password = requestDto.getNewPassword();
-		}
+	}
+
+	public void update(ProfileRequestDto requestDto, String encodedPasswdDto) {
+		this.name = requestDto.getName();
+		this.email = requestDto.getEmail();
+		this.intro = requestDto.getIntro();
+		this.password = encodedPasswdDto;
 	}
 }
