@@ -1,7 +1,6 @@
 package com.prac.music.security;
 
 import com.prac.music.domain.user.entity.User;
-import com.prac.music.domain.user.entity.UserStatusEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,8 +22,8 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        UserStatusEnum role = user.getUserStatusEnum();
-        return Collections.singleton(new SimpleGrantedAuthority(role.getAuthority()));
+        // 기본 권한 설정 (필요 시 수정 가능)
+        return Collections.singleton(new SimpleGrantedAuthority("USER"));
     }
 
     @Override

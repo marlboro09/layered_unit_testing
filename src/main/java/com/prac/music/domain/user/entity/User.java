@@ -3,13 +3,10 @@ package com.prac.music.domain.user.entity;
 import com.prac.music.domain.user.dto.SignupRequestDto;
 import com.prac.music.domain.user.dto.ProfileRequestDto;
 import io.micrometer.common.util.StringUtils;
-
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -36,16 +33,8 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, name = "intro")
     private String intro;
 
-    @Column(nullable = false, name = "status")
-    private UserStatusEnum userStatusEnum;
-
     @Column(name = "refresh_token")
     private String refreshToken;
-
-
-    public boolean isAdmin() {
-        return this.userStatusEnum == UserStatusEnum.SECESSION;
-    }
 
     public User(SignupRequestDto requestDto) {
         this.userId = requestDto.getUserId();
@@ -53,7 +42,6 @@ public class User extends BaseTimeEntity {
         this.email = requestDto.getEmail();
         this.password = requestDto.getPassword();
         this.intro = requestDto.getIntro();
-        this.userStatusEnum = UserStatusEnum.NORMAL;
     }
 
     public void update(ProfileRequestDto requestDto) {

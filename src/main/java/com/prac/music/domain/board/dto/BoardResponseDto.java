@@ -22,6 +22,6 @@ public class BoardResponseDto {
 		this.boardId = board.getId();
 		this.userId = board.getUser().getId();
 		this.contents = board.getContents();
-		this.createdAt = board.getCreateAt();
+		this.createdAt = board.getCreatedAt();
 	}
 }

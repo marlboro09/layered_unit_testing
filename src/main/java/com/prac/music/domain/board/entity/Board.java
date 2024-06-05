@@ -35,17 +35,17 @@ public class Board {
 	private User user;
 
 	@Column(nullable = false, name = "createdAt")
-	private LocalDateTime createAt;
+	private LocalDateTime createdAt;
 
 	@Column(nullable = false, name = "updatedAt")
 	private LocalDateTime updatedAt;
 
 	@Builder
-	public Board(String contents, User user, LocalDateTime createAt, LocalDateTime updatedAt) {
+	public Board(String contents, User user, LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.contents = contents;
 		this.user = user;
-		this.createAt = createAt;
-		this.updatedAt = updatedAt;
+		this.createdAt = createdAt; // 생성 시점 설정
+		this.updatedAt = updatedAt; // 생성 시점 설정
 	}
 
 	public void update(UpdateRequestDto requestDto) {

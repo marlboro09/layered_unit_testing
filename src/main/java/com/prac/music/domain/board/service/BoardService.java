@@ -1,5 +1,6 @@
 package com.prac.music.domain.board.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,46 +31,63 @@ public class BoardService {
 
 	@Transactional
 	public BoardResponseDto createBoard(BoardRequestDto requestDto, User user) {
-		User persistentUser = userRepository.findById(user.getId())
-			.orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+		try {
+			User persistentUser = userRepository.findById(user.getId())
+				.orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
-		Board board = Board.builder()
-			.contents(requestDto.getContents())
-			.user(persistentUser)
-			.build();
+			Board board = Board.builder()
+				.contents(requestDto.getContents())
+				.user(persistentUser)
+				.createdAt(LocalDateTime.now())
+				.updatedAt(LocalDateTime.now())
+				.build();
 
-		Board savedBoard = boardRepository.save(board);
-		log.info("게시물 저장: {}", savedBoard);
+			Board savedBoard = boardRepository.save(board);
+			log.info("게시물 저장: {}", savedBoard);
 
-		return new BoardResponseDto(savedBoard);
+			return new BoardResponseDto(savedBoard);
+		} catch (Exception e) {
+			log.error("게시물 생성 중 오류 발생", e);
+			throw e;
+		}
 	}
 
 	@Transactional
 	public BoardResponseDto updateBoard(Long id, UpdateRequestDto requestDto, User user) {
-		Board board = boardRepository.findById(id)
-			.orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다."));
+		try {
+			Board board = boardRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다."));
 
-		if (isNotAuthorizedUser(board, user)) {
-			throw new IllegalStateException("권한이 없습니다.");
+			if (isNotAuthorizedUser(board, user)) {
+				throw new IllegalStateException("권한이 없습니다.");
+			}
+
+			board.update(requestDto);
+			Board updatedBoard = boardRepository.save(board);
+			log.info("게시글 수정: {}", updatedBoard);
+			return new BoardResponseDto(updatedBoard);
+		} catch (Exception e) {
+			log.error("게시물 수정 중 오류 발생", e);
+			throw e;
 		}
-
-		board.update(requestDto);
-		Board updatedBoard = boardRepository.save(board);
-		log.info("게시글 수정: {}", updatedBoard);
-		return new BoardResponseDto(updatedBoard);
 	}
 
 	@Transactional
 	public void deleteBoard(Long id, User user) {
-		Board board = boardRepository.findById(id)
-			.orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다."));
+		try {
+			Board board = boardRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다."));
 
-		if (isNotAuthorizedUser(board, user)) {
-			throw new IllegalStateException("권한이 없습니다.");
+			if (isNotAuthorizedUser(board, user)) {
+				throw new IllegalStateException("권한이 없습니다.");
+			}
+
+			boardRepository.delete(board);
+			log.info("게시글 삭제: {}", board);
+		} catch (Exception e) {
+			log.error("게시물 삭제 중 오류 발생", e);
+			throw e;
 		}
-
-		boardRepository.delete(board);
-		log.info("게시글 삭제: {}", board);
 	}
 
 	@Transactional(readOnly = true)
@@ -82,6 +100,6 @@ public class BoardService {
 	private boolean isNotAuthorizedUser(Board board, User user) {
 		User persistentUser = userRepository.findById(user.getId())
 			.orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
-		return !board.getUser().equals(persistentUser) && !persistentUser.isAdmin();
+		return !board.getUser().equals(persistentUser);
 	}
 }

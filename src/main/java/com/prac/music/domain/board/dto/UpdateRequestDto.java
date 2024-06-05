@@ -6,13 +6,10 @@ import lombok.Getter;
 @Getter
 public class UpdateRequestDto {
 
-	private Long boardId;
-
 	private String contents;
 
 	@Builder
-	public UpdateRequestDto(Long boardId, String contents) {
-		this.boardId = boardId;
+	public UpdateRequestDto(String contents) {
 		this.contents = contents;
 	}
 }
