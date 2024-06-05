@@ -2,6 +2,7 @@ package com.prac.music.domain.board.controller;
 
 import java.util.List;
 
+import com.prac.music.security.UserDetailsImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +18,6 @@ import com.prac.music.domain.board.dto.BoardRequestDto;
 import com.prac.music.domain.board.dto.BoardResponseDto;
 import com.prac.music.domain.board.dto.UpdateRequestDto;
 import com.prac.music.domain.board.service.BoardService;
-import com.prac.music.security.UserDetailsImpl;
 
 import jakarta.validation.Valid;
 
