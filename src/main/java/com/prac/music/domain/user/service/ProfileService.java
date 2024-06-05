@@ -17,20 +17,20 @@ public class ProfileService {
     private final UserRepository userRepository;
 
     // 유저 프로필 조회
-    public ProfileResponseDto getProfile(String userId) {
-        User user = findUserById(userId);
-        return new ProfileResponseDto(user);
+    public ProfileResponseDto getProfile(User user) {
+        User getUser = findUserById(user.getUserId());
+        return new ProfileResponseDto(getUser);
     }
 
     // 유저 프로필 수정
     @Transactional
-    public String updateProfile(String userId, ProfileRequestDto requestDto) {
-        User user = findUserById(userId);
+    public String updateProfile(ProfileRequestDto requestDto, User user) {
+        User getuser = findUserById(user.getUserId());
 
         // Dto 에 비밀번호가 들어왔을 경우
-        validatePassword(requestDto.getPassword(), requestDto.getNewPassword(), user.getPassword());
+        validatePassword(requestDto.getPassword(), requestDto.getNewPassword(), getuser.getPassword());
 
-        user.update(requestDto);
+        getuser.update(requestDto);
         return "프로필이 수정되었습니다.";
     }
 
@@ -47,16 +47,16 @@ public class ProfileService {
         if (StringUtils.isBlank(password) && StringUtils.isBlank(newPassword)) {
             return; // 둘 다 비어있으면 검사하지 않음
         }
-        if (!StringUtils.isBlank(password)) {
+        if (StringUtils.isBlank(password)) {
             throw new NullPointerException("현재 비밀번호를 입력해주세요");
         }
-        if (!StringUtils.isBlank(newPassword)) {
+        if (StringUtils.isBlank(newPassword)) {
             throw new NullPointerException("새 비밀번호를 입력해주세요");
         }
         if (!userPassword.equals(password)) {
             throw new IllegalArgumentException("현재 비밀번호와 일치하지 않습니다.");
         }
-        if (userPassword.equals(password)) {
+        if (userPassword.equals(newPassword)) {
             throw new IllegalArgumentException("현재 비밀번호와 동일한 비밀번호로는 변경할 수 없습니다.");
         }
     }
