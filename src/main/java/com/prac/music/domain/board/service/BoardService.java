@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.prac.music.domain.board.dto.BoardRequestDto;
 import com.prac.music.domain.board.dto.BoardResponseDto;
+import com.prac.music.domain.board.dto.UpdateRequestDto;
 import com.prac.music.domain.board.entity.Board;
 import com.prac.music.domain.board.repository.BoardRepository;
 import com.prac.music.domain.user.entity.User;
@@ -40,7 +41,7 @@ public class BoardService {
 	}
 
 	@Transactional
-	public BoardResponseDto updateBoard(Long id, BoardRequestDto requestDto, User user) {
+	public BoardResponseDto updateBoard(Long id, UpdateRequestDto requestDto, User user) {
 		Board board = boardRepository.findById(id)
 			.orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다."));
 
