@@ -6,8 +6,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 public class UserDetailsImpl implements UserDetails {
 
@@ -17,8 +17,14 @@ public class UserDetailsImpl implements UserDetails {
         this.user = user;
     }
 
-    public User getUser(){
+    public User getUser() {
         return user;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        UserStatusEnum role = user.getUserStatusEnum();
+        return Collections.singleton(new SimpleGrantedAuthority(role.getAuthority()));
     }
 
     @Override
@@ -32,15 +38,8 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        UserStatusEnum status = user.getUserStatusEnum();
-        String authority = status.getAuthority();
-
-        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(simpleGrantedAuthority);
-
-        return authorities;
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
     @Override
