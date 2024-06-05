@@ -2,7 +2,6 @@ package com.prac.music.domain.board.entity;
 
 import java.time.LocalDateTime;
 
-import com.prac.music.domain.board.dto.BoardRequestDto;
 import com.prac.music.domain.board.dto.UpdateRequestDto;
 import com.prac.music.domain.user.entity.User;
 
@@ -15,10 +14,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Data
+@Getter
+@NoArgsConstructor
 @Table(name = "board")
 public class Board {
 	@Id
@@ -38,11 +40,13 @@ public class Board {
 	@Column(nullable = false, name = "updatedAt")
 	private LocalDateTime updatedAt;
 
-	public Board(BoardRequestDto requestDto, User user) {
+	@Builder
+	public Board(Long id, String contents, User user, LocalDateTime createAt, LocalDateTime updatedAt) {
+		this.id = id;
+		this.contents = contents;
 		this.user = user;
-		this.contents = requestDto.getContents();
-		this.createAt = LocalDateTime.now();
-		this.updatedAt = LocalDateTime.now();
+		this.createAt = createAt != null ? createAt : LocalDateTime.now();
+		this.updatedAt = updatedAt != null ? updatedAt : LocalDateTime.now();
 	}
 
 	public void update(UpdateRequestDto requestDto) {

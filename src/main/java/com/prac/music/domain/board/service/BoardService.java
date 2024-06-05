@@ -12,7 +12,7 @@ import com.prac.music.domain.board.dto.UpdateRequestDto;
 import com.prac.music.domain.board.entity.Board;
 import com.prac.music.domain.board.repository.BoardRepository;
 import com.prac.music.domain.user.entity.User;
-import com.prac.music.domain.user.repsitory.UserRepository;
+import com.prac.music.domain.user.repository.UserRepository;
 import com.prac.music.exception.NotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,12 @@ public class BoardService {
 		User persistentUser = userRepository.findById(user.getId())
 			.orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
-		Board board = new Board(requestDto, persistentUser);
+		Board board = Board.builder()
+			.id(requestDto.getBoardId())
+			.contents(requestDto.getContents())
+			.user(persistentUser)
+			.build();
+
 		Board savedBoard = boardRepository.save(board);
 		log.info("게시물 저장: {}", savedBoard);
 
