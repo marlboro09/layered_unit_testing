@@ -1,12 +1,10 @@
 package com.prac.music.domain.board.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.prac.music.domain.board.dto.BoardRequestDto;
 import com.prac.music.domain.board.dto.BoardResponseDto;
 import com.prac.music.domain.board.dto.UpdateRequestDto;
@@ -18,8 +16,8 @@ import com.prac.music.exception.NotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Service
 @Slf4j
+@Service
 public class BoardService {
 	private final BoardRepository boardRepository;
 	private final UserRepository userRepository;
@@ -31,63 +29,43 @@ public class BoardService {
 
 	@Transactional
 	public BoardResponseDto createBoard(BoardRequestDto requestDto, User user) {
-		try {
-			User persistentUser = userRepository.findById(user.getId())
-				.orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
+		User persistentUser = userRepository.findById(user.getId())
+			.orElseThrow(() -> new NotFoundException("사용자 ID " + user.getId() + "를 찾을 수 없습니다."));
 
-			Board board = Board.builder()
-				.contents(requestDto.getContents())
-				.user(persistentUser)
-				.createdAt(LocalDateTime.now())
-				.updatedAt(LocalDateTime.now())
-				.build();
+		Board board = Board.builder()
+			.contents(requestDto.getContents())
+			.user(persistentUser)
+			.build();
 
-			Board savedBoard = boardRepository.save(board);
-			log.info("게시물 저장: {}", savedBoard);
+		Board savedBoard = boardRepository.save(board);
+		log.info("게시물 저장: {}", savedBoard);
 
-			return new BoardResponseDto(savedBoard);
-		} catch (Exception e) {
-			log.error("게시물 생성 중 오류 발생", e);
-			throw e;
-		}
+		return new BoardResponseDto(savedBoard);
 	}
 
 	@Transactional
 	public BoardResponseDto updateBoard(Long id, UpdateRequestDto requestDto, User user) {
-		try {
-			Board board = boardRepository.findById(id)
-				.orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다."));
+		Board board = boardRepository.findById(id)
+			.orElseThrow(() -> new NotFoundException("게시물 ID " + id + "를 찾을 수 없습니다."));
 
-			if (isNotAuthorizedUser(board, user)) {
-				throw new IllegalStateException("권한이 없습니다.");
-			}
+		validateUserAuthorization(board, user);
 
-			board.update(requestDto);
-			Board updatedBoard = boardRepository.save(board);
-			log.info("게시글 수정: {}", updatedBoard);
-			return new BoardResponseDto(updatedBoard);
-		} catch (Exception e) {
-			log.error("게시물 수정 중 오류 발생", e);
-			throw e;
-		}
+		board.update(requestDto.getContents());
+		Board updatedBoard = boardRepository.save(board);
+		log.info("게시글 수정 성공: {}", updatedBoard);
+
+		return new BoardResponseDto(updatedBoard);
 	}
 
 	@Transactional
 	public void deleteBoard(Long id, User user) {
-		try {
-			Board board = boardRepository.findById(id)
-				.orElseThrow(() -> new NotFoundException("게시물을 찾을 수 없습니다."));
+		Board board = boardRepository.findById(id)
+			.orElseThrow(() -> new NotFoundException("게시물 ID " + id + "를 찾을 수 없습니다."));
 
-			if (isNotAuthorizedUser(board, user)) {
-				throw new IllegalStateException("권한이 없습니다.");
-			}
+		validateUserAuthorization(board, user);
 
-			boardRepository.delete(board);
-			log.info("게시글 삭제: {}", board);
-		} catch (Exception e) {
-			log.error("게시물 삭제 중 오류 발생", e);
-			throw e;
-		}
+		boardRepository.delete(board);
+		log.info("게시글 삭제: {}", board);
 	}
 
 	@Transactional(readOnly = true)
@@ -97,9 +75,14 @@ public class BoardService {
 			.collect(Collectors.toList());
 	}
 
-	private boolean isNotAuthorizedUser(Board board, User user) {
-		User persistentUser = userRepository.findById(user.getId())
-			.orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
-		return !board.getUser().equals(persistentUser);
+	private void validateUserAuthorization(Board board, User user) {
+		if (!isAuthorizedUser(board, user)) {
+			log.warn("사용자 {}는 게시글 {}의 수정 권한이 없습니다.", user.getId(), board.getId());
+			throw new IllegalStateException("수정 권한이 없습니다.");
+		}
+	}
+
+	private boolean isAuthorizedUser(Board board, User user) {
+		return board.getUser().equals(user) || user.isAdmin();
 	}
 }
