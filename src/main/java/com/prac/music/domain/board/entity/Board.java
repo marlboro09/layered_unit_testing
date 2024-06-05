@@ -41,12 +41,11 @@ public class Board {
 	private LocalDateTime updatedAt;
 
 	@Builder
-	public Board(Long id, String contents, User user, LocalDateTime createAt, LocalDateTime updatedAt) {
-		this.id = id;
+	public Board(String contents, User user, LocalDateTime createAt, LocalDateTime updatedAt) {
 		this.contents = contents;
 		this.user = user;
-		this.createAt = createAt != null ? createAt : LocalDateTime.now();
-		this.updatedAt = updatedAt != null ? updatedAt : LocalDateTime.now();
+		this.createAt = createAt;
+		this.updatedAt = updatedAt;
 	}
 
 	public void update(UpdateRequestDto requestDto) {

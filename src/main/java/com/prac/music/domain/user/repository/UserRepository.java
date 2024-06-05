@@ -1,4 +1,4 @@
-package com.prac.music.domain.user.repsitory;
+package com.prac.music.domain.user.repository;
 
 import com.prac.music.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;

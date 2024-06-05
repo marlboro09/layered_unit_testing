@@ -1,7 +1,7 @@
 package com.prac.music.security;
 
 import com.prac.music.domain.user.entity.User;
-import com.prac.music.domain.user.repsitory.UserRepository;
+import com.prac.music.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

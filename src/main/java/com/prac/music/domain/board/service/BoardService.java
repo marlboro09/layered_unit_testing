@@ -34,7 +34,6 @@ public class BoardService {
 			.orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
 
 		Board board = Board.builder()
-			.id(requestDto.getBoardId())
 			.contents(requestDto.getContents())
 			.user(persistentUser)
 			.build();

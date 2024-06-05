@@ -4,7 +4,7 @@ import com.prac.music.domain.user.dto.LoginRequestDto;
 import com.prac.music.domain.user.dto.LoginResponseDto;
 import com.prac.music.domain.user.dto.SignupRequestDto;
 import com.prac.music.domain.user.entity.User;
-import com.prac.music.domain.user.repsitory.UserRepository;
+import com.prac.music.domain.user.repository.UserRepository;
 import com.prac.music.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
