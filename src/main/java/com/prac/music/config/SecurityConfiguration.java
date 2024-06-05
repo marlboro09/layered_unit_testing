@@ -38,16 +38,18 @@ public class SecurityConfiguration {
         AuthenticationManager authenticationManager = authenticationManager(authenticationConfiguration);
 
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/users/login", "/api/users/signup"
-                                ).permitAll()
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(new JwtAuthorizationFilter(jwtService, userDetailsService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtAuthenticationFilter(jwtService, authenticationManager), UsernamePasswordAuthenticationFilter.class);
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    "/v2/api-docs", "/v3/api-docs", "/v3/api-docs/**", "/swagger-resources",
+                    "/swagger-resources/**", "/configuration/ui", "/configuration/security", "/swagger-ui/**",
+                    "/webjars/**", "/swagger-ui.html", "/api/users/login", "/api/users/signup", "/api/boards/list"
+                ).permitAll()
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(new JwtAuthorizationFilter(jwtService, userDetailsService), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new JwtAuthenticationFilter(jwtService, authenticationManager), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

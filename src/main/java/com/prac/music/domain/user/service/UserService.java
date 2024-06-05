@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class UserService {
 
         Optional<User> checkUser = userRepository.findByUserId(userId);
 
-        if (checkUser.isPresent()) {
+        if(checkUser.isPresent()){
             throw new IllegalArgumentException("이미 중복된 사용자가 존재합니다.");
         }
 
@@ -39,7 +40,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public LoginResponseDto loginUser(LoginRequestDto requestDto) {
+    public LoginResponseDto loginUser(@RequestBody LoginRequestDto requestDto){
         User user = this.userRepository.findByUserId(requestDto.getUserId()).orElseThrow(
             () -> new UsernameNotFoundException("아이디를 다시 확인해주세요")
         );

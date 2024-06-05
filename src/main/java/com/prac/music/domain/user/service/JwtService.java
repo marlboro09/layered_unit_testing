@@ -32,7 +32,7 @@ public class JwtService {
         Date validity = new Date(now.getTime() + 3600000); // 1시간 유효
 
         return BEARER_PREFIX +
-                Jwts.builder()
+            Jwts.builder()
                 .setSubject(userId)
                 .setIssuedAt(now)
                 .setExpiration(validity)
