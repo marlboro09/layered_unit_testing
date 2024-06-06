@@ -21,12 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class BoardService {
-	@Autowired
-	private final BoardRepository boardRepository;
 
-	@Autowired
+	private final BoardRepository boardRepository;
 	private final UserRepository userRepository;
 
+	@Autowired
 	public BoardService(BoardRepository boardRepository, UserRepository userRepository) {
 		this.boardRepository = boardRepository;
 		this.userRepository = userRepository;
@@ -38,6 +37,7 @@ public class BoardService {
 			.orElseThrow(() -> new NotFoundException("사용자 ID " + user.getId() + "를 찾을 수 없습니다."));
 
 		Board board = Board.builder()
+			.title(requestDto.getTitle())
 			.contents(requestDto.getContents())
 			.user(persistentUser)
 			.build();
@@ -55,6 +55,7 @@ public class BoardService {
 
 		validateUserAuthorization(board, user);
 
+		board.update(requestDto.getTitle());
 		board.update(requestDto.getContents());
 		Board updatedBoard = boardRepository.save(board);
 		log.info("게시글 수정 성공: {}", updatedBoard);

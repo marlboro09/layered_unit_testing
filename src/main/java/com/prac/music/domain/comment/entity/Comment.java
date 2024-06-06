@@ -46,15 +46,16 @@ public class Comment {
     private User user;
 
 	@Builder
-	public Comment(String contents, Board board, User user) {
+	public Comment(String contents, User user, Board board) {
 		this.contents = contents;
-        this.board = board;
-        this.user = user;
-        this.createdAt = LocalDateTime.now();
+		this.user = user;
+		this.board = board;
+		this.createdAt = LocalDateTime.now();
 	}
 
 	public void update(String contents) {
         this.contents = contents;
+		this.updatedAt = LocalDateTime.now();
 
     }
 }
