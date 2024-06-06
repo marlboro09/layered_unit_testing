@@ -4,11 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.prac.music.domain.board.dto.BoardResponseDto;
-import com.prac.music.domain.board.dto.UpdateRequestDto;
 import com.prac.music.domain.board.entity.Board;
 import com.prac.music.domain.board.repository.BoardRepository;
-import com.prac.music.domain.board.service.BoardService;
 import com.prac.music.domain.comment.dto.CommentRequestDto;
 import com.prac.music.domain.comment.dto.CommentResponseDto;
 import com.prac.music.domain.comment.dto.CommentUpdateRequestDto;
@@ -25,15 +22,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CommentService {
 
-	@Autowired
-	private CommentRepository commentRepository;
+	private final CommentRepository commentRepository;
+	private final UserRepository userRepository;
+	private final BoardRepository boardRepository;
 
 	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
-	private BoardRepository boardRepository;
-
 	public CommentService(CommentRepository commentRepository, BoardRepository boardRepository, UserRepository userRepository) {
 		this.commentRepository = commentRepository;
 		this.boardRepository = boardRepository;
@@ -41,8 +34,8 @@ public class CommentService {
 	}
 
 	@Transactional
-	public CommentResponseDto createComment(CommentRequestDto requestDto, Board board, User user) {
-		Board findBoard = boardRepository.findById(board.getId())
+	public CommentResponseDto createComment(CommentRequestDto requestDto, Long boardId, User user) {
+		Board findBoard = boardRepository.findById(boardId)
 			.orElseThrow(() -> new NotFoundException("게시글을 찾을 수 없습니다."));
 		User persistentUser = userRepository.findById(user.getId())
 			.orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
@@ -64,11 +57,11 @@ public class CommentService {
 	}
 
 	@Transactional
-	public CommentUpdateResponseDto updateComment(Long Id, User user, CommentUpdateRequestDto requestDto) {
-		Comment comment = commentRepository.findById(Id)
+	public CommentUpdateResponseDto updateComment(Long commentId, User user, CommentUpdateRequestDto requestDto) {
+		Comment comment = commentRepository.findById(commentId)
 			.orElseThrow(() -> new NotFoundException("찾으시는 댓글이 없습니다."));
 
-		if (validateUserAuthorization(comment, user)) {
+		if (!validateUserAuthorization(comment, user)) {
 			throw new RuntimeException("댓글 수정 권한이 없습니다.");
 		}
 
@@ -84,11 +77,11 @@ public class CommentService {
 	}
 
 	@Transactional
-	public void deleteComment(Long Id, User user) {
-		Comment comment = commentRepository.findById(Id).
-			orElseThrow(() -> new NotFoundException("찾으시는 댓글은 없습니다."));
+	public void deleteComment(Long commentId, User user) {
+		Comment comment = commentRepository.findById(commentId)
+			.orElseThrow(() -> new NotFoundException("찾으시는 댓글은 없습니다."));
 
-		if (validateUserAuthorization(comment, user)) {
+		if (!validateUserAuthorization(comment, user)) {
 			throw new RuntimeException("댓글 삭제 권한이 없습니다.");
 		}
 
@@ -104,6 +97,6 @@ public class CommentService {
 	private boolean validateUserAuthorization(Comment comment, User user) {
 		User persistentUser = userRepository.findById(user.getId())
 			.orElseThrow(() -> new NotFoundException("사용자를 찾을 수 없습니다."));
-		return !comment.getUser().equals(persistentUser);
+		return comment.getUser().equals(persistentUser);
 	}
 }
