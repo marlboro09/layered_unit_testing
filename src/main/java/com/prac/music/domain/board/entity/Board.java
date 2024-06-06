@@ -15,6 +15,9 @@ public class Board {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(nullable = false, name = "title")
+	private String title;
+
 	@Column(nullable = false, name = "contents")
 	private String contents;
 
@@ -29,7 +32,8 @@ public class Board {
 	private LocalDateTime updatedAt;
 
 	@Builder
-	public Board(String contents, User user) {
+	public Board(String title, String contents, User user) {
+		this.title = title;
 		this.contents = contents;
 		this.user = user;
 		this.createAt = LocalDateTime.now();

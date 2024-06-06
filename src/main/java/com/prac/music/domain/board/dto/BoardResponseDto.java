@@ -14,6 +14,8 @@ public class BoardResponseDto {
 
 	private Long userId;
 
+	private String title;
+
 	private String contents;
 
 	private LocalDateTime createdAt;
@@ -21,6 +23,7 @@ public class BoardResponseDto {
 	public BoardResponseDto(Board board) {
 		this.boardId = board.getId();
 		this.userId = board.getUser().getId();
+		this.title = board.getTitle();
 		this.contents = board.getContents();
 		this.createdAt = board.getCreateAt();
 	}
