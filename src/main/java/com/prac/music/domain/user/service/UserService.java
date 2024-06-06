@@ -55,11 +55,7 @@ public class UserService {
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
 
-        String retoken = token.substring(7);
-        jwtService.isTokenExpired(retoken);
-        jwtService.isRefreshTokenExpired(refreshToken);
-
-        return new LoginResponseDto(token, "로그인에 성공했습니다.");
+        return new LoginResponseDto(token, refreshToken, "로그인에 성공했습니다.");
     }
 
 }

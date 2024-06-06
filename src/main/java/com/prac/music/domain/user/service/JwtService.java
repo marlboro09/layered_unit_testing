@@ -19,7 +19,7 @@ public class JwtService {
     private String secretKey;
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
-
+    public static final String REFRESH_TOKEN_HEADER = "Authorization";
     public static final String BEARER_PREFIX = "Bearer ";
 
     private Key getSigningKey() {
@@ -44,8 +44,7 @@ public class JwtService {
     public String createRefreshToken(String userId) { // 리프레시 토큰 생성
         Date now = new Date();
         Long twoWeek = 14L * 24 * 60 * 60 * 1000;
-        Long test = 3L * 60 * 1000;
-        Date validity = new Date(now.getTime() + test);
+        Date validity = new Date(now.getTime() + twoWeek);
 
         return BEARER_PREFIX +
                 Jwts.builder()
