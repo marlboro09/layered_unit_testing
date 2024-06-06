@@ -43,7 +43,7 @@ public class Comment {
 
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
-    private User user;
+	private User user;
 
 	@Builder
 	public Comment(String contents, User user, Board board) {
@@ -54,8 +54,8 @@ public class Comment {
 	}
 
 	public void update(String contents) {
-        this.contents = contents;
+		this.contents = contents;
 		this.updatedAt = LocalDateTime.now();
 
-    }
+	}
 }
