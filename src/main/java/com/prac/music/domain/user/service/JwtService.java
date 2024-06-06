@@ -19,7 +19,7 @@ public class JwtService {
     private String secretKey;
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String REFRESH_TOKEN_HEADER = "Authorization";
+    public static final String REFRESH_TOKEN_HEADER = "RefreshToken";
     public static final String BEARER_PREFIX = "Bearer ";
 
     private Key getSigningKey() {
@@ -73,13 +73,23 @@ public class JwtService {
         return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
     }
 
-    public String getJwtFromHeader(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-            return bearerToken.substring(7);
+    public String substringToken (String token) {
+        if (StringUtils.hasText(token) && token.startsWith(BEARER_PREFIX)) {
+            return token.substring(7);
         }
         return null;
     }
+
+    public String getJwtFromHeader(HttpServletRequest request) {
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        return substringToken(bearerToken);
+    }
+
+    public String getRefreshJwtFromHeader(HttpServletRequest request) {
+        String refreshToken = request.getHeader(REFRESH_TOKEN_HEADER);
+        return substringToken(refreshToken);
+    }
+
     public Boolean isTokenExpired(String token){
         Claims claims = getUserInfoFromToken(token);
         Date date = claims.getExpiration();
