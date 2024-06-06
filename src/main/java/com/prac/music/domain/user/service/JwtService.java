@@ -29,7 +29,8 @@ public class JwtService {
 
     public String createToken(String userId) {
         Date now = new Date();
-        Date validity = new Date(now.getTime() + 3600000); // 1시간 유효
+        Long test = 1L * 60 * 1000;
+        Date validity = new Date(now.getTime() + test); // 30분 유효
 
         return BEARER_PREFIX +
             Jwts.builder()
@@ -40,14 +41,27 @@ public class JwtService {
                 .compact();
     }
 
+    public String createRefreshToken(String userId) { // 리프레시 토큰 생성
+        Date now = new Date();
+        Long twoWeek = 14L * 24 * 60 * 60 * 1000;
+        Long test = 2L * 60 * 1000;
+        Date validity = new Date(now.getTime() + test);
+
+        return BEARER_PREFIX +
+                Jwts.builder()
+                        .setSubject(userId)
+                        .setIssuedAt(now)
+                        .setExpiration(validity)
+                        .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                        .compact();
+    }
+
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
-        } catch (ExpiredJwtException e) {
-            log.error("Expired JWT token, 만료된 JWT token 입니다.");
         } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
         } catch (IllegalArgumentException e) {
@@ -66,5 +80,20 @@ public class JwtService {
             return bearerToken.substring(7);
         }
         return null;
+    }
+    public Boolean isTokenExpired(String token){
+        log.info("토큰을 검사합니다");
+        Claims claims = getUserInfoFromToken(token);
+        Date date = claims.getExpiration();
+        System.out.println("date = " + date);
+        return date.before(new Date());
+    }
+
+    public Boolean isRefreshTokenExpired(String refreshToken){
+        log.info("리프레시 토큰을 검사합니다.");
+        Claims claims = getUserInfoFromToken(refreshToken);
+        Date date = claims.getExpiration();
+        System.out.println("date = " + date);
+        return date.before(new Date());
     }
 }
