@@ -1,6 +1,7 @@
 package com.prac.music.domain.board.entity;
 
 import com.prac.music.domain.user.entity.User;
+
 import jakarta.persistence.*;
 import lombok.*;
 

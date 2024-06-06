@@ -21,12 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class BoardService {
-	@Autowired
-	private final BoardRepository boardRepository;
 
-	@Autowired
+	private final BoardRepository boardRepository;
 	private final UserRepository userRepository;
 
+	@Autowired
 	public BoardService(BoardRepository boardRepository, UserRepository userRepository) {
 		this.boardRepository = boardRepository;
 		this.userRepository = userRepository;
