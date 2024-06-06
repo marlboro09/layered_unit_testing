@@ -48,10 +48,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
         String userId = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
-        UserStatusEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getUserStatusEnum();
 
         String token = jwtService.createToken(userId);
+        String refreshToken = jwtService.createRefreshToken(userId);
         response.addHeader(JwtService.AUTHORIZATION_HEADER, token);
+        response.addHeader(JwtService.REFRESH_TOKEN_HEADER, refreshToken);
     }
 
     @Override

@@ -42,15 +42,20 @@ public class UserService {
 
     public LoginResponseDto loginUser(@RequestBody LoginRequestDto requestDto){
         User user = this.userRepository.findByUserId(requestDto.getUserId()).orElseThrow(
-            () -> new UsernameNotFoundException("아이디를 다시 확인해주세요")
+                () -> new UsernameNotFoundException("아이디를 다시 확인해주세요")
         );
 
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(requestDto.getUserId(),
-                requestDto.getPassword()));
+                new UsernamePasswordAuthenticationToken(requestDto.getUserId(),
+                        requestDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtService.createToken(requestDto.getUserId());
-        return new LoginResponseDto(token, "로그인에 성공했습니다.");
+        String refreshToken = jwtService.createRefreshToken(requestDto.getUserId());
+        user.setRefreshToken(refreshToken);
+        userRepository.save(user);
+
+        return new LoginResponseDto(token, refreshToken, "로그인에 성공했습니다.");
     }
+
 }
