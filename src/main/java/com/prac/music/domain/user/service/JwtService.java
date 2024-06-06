@@ -44,7 +44,7 @@ public class JwtService {
     public String createRefreshToken(String userId) { // 리프레시 토큰 생성
         Date now = new Date();
         Long twoWeek = 14L * 24 * 60 * 60 * 1000;
-        Long test = 2L * 60 * 1000;
+        Long test = 3L * 60 * 1000;
         Date validity = new Date(now.getTime() + test);
 
         return BEARER_PREFIX +
@@ -91,7 +91,8 @@ public class JwtService {
 
     public Boolean isRefreshTokenExpired(String refreshToken){
         log.info("리프레시 토큰을 검사합니다.");
-        Claims claims = getUserInfoFromToken(refreshToken);
+        String reToken = refreshToken.substring(7);
+        Claims claims = getUserInfoFromToken(reToken);
         Date date = claims.getExpiration();
         System.out.println("date = " + date);
         return date.before(new Date());

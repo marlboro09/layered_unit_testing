@@ -4,7 +4,7 @@ import com.prac.music.domain.user.dto.LoginRequestDto;
 import com.prac.music.domain.user.dto.LoginResponseDto;
 import com.prac.music.domain.user.dto.SignupRequestDto;
 import com.prac.music.domain.user.entity.User;
-import com.prac.music.domain.user.repsitory.UserRepository;
+import com.prac.music.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,6 +51,15 @@ public class UserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtService.createToken(requestDto.getUserId());
+        String refreshToken = jwtService.createRefreshToken(requestDto.getUserId());
+        user.setRefreshToken(refreshToken);
+        userRepository.save(user);
+
+        String retoken = token.substring(7);
+        jwtService.isTokenExpired(retoken);
+        jwtService.isRefreshTokenExpired(refreshToken);
+
         return new LoginResponseDto(token, "로그인에 성공했습니다.");
     }
+
 }
