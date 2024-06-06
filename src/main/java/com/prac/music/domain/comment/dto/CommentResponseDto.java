@@ -22,9 +22,9 @@ public class CommentResponseDto {
 
 	public CommentResponseDto(Comment comment) {
 		this.id = comment.getId();
-        this.contents = comment.getContents();
-        this.boardId = comment.getBoard().getId();
-        this.userId = comment.getUser().getId();
-        this.createdAt = comment.getCreatedAt();
+		this.contents = comment.getContents();
+		this.boardId = comment.getBoard().getId();
+		this.userId = comment.getUser().getId();
+		this.createdAt = comment.getCreatedAt();
 	}
 }
