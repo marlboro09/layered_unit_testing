@@ -1,12 +1,16 @@
 package com.prac.music.domain.board.dto;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
+@NoArgsConstructor
 public class UpdateRequestDto {
-	private Long boardId;
-
 	private String contents;
+
+	@Builder
+	public UpdateRequestDto(String contents) {
+		this.contents = contents;
+	}
 }

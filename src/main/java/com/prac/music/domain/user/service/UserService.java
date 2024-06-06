@@ -4,7 +4,7 @@ import com.prac.music.domain.user.dto.LoginRequestDto;
 import com.prac.music.domain.user.dto.LoginResponseDto;
 import com.prac.music.domain.user.dto.SignupRequestDto;
 import com.prac.music.domain.user.entity.User;
-import com.prac.music.domain.user.repsitory.UserRepository;
+import com.prac.music.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,12 +42,12 @@ public class UserService {
 
     public LoginResponseDto loginUser(@RequestBody LoginRequestDto requestDto){
         User user = this.userRepository.findByUserId(requestDto.getUserId()).orElseThrow(
-                () -> new UsernameNotFoundException("아이디를 다시 확인해주세요")
+            () -> new UsernameNotFoundException("아이디를 다시 확인해주세요")
         );
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(requestDto.getUserId(),
-                        requestDto.getPassword()));
+            new UsernamePasswordAuthenticationToken(requestDto.getUserId(),
+                requestDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtService.createToken(requestDto.getUserId());

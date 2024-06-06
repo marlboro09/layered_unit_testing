@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class BoardResponseDto {
+public class UpdateResponseDto {
+
 	private Long boardId;
 
 	private Long userId;
@@ -18,10 +19,13 @@ public class BoardResponseDto {
 
 	private LocalDateTime createdAt;
 
-	public BoardResponseDto(Board board) {
+	private LocalDateTime updatedAt;
+
+	public UpdateResponseDto(Board board) {
 		this.boardId = board.getId();
 		this.userId = board.getUser().getId();
 		this.contents = board.getContents();
 		this.createdAt = board.getCreateAt();
+		this.updatedAt = board.getUpdatedAt();
 	}
 }
