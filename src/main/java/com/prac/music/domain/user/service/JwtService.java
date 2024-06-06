@@ -29,8 +29,8 @@ public class JwtService {
 
     public String createToken(String userId) {
         Date now = new Date();
-        Long test = 1L * 60 * 1000;
-        Date validity = new Date(now.getTime() + test); // 30분 유효
+        Long minute = 30L * 60 * 1000;
+        Date validity = new Date(now.getTime() + minute); // 30분 유효
 
         return BEARER_PREFIX +
             Jwts.builder()
@@ -81,19 +81,15 @@ public class JwtService {
         return null;
     }
     public Boolean isTokenExpired(String token){
-        log.info("토큰을 검사합니다");
         Claims claims = getUserInfoFromToken(token);
         Date date = claims.getExpiration();
-        System.out.println("date = " + date);
         return date.before(new Date());
     }
 
     public Boolean isRefreshTokenExpired(String refreshToken){
-        log.info("리프레시 토큰을 검사합니다.");
         String reToken = refreshToken.substring(7);
         Claims claims = getUserInfoFromToken(reToken);
         Date date = claims.getExpiration();
-        System.out.println("date = " + date);
         return date.before(new Date());
     }
 }
