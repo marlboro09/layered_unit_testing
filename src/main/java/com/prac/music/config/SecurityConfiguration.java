@@ -50,7 +50,7 @@ public class SecurityConfiguration {
                                 ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthorizationFilter(jwtService, userDetailsService, userRepository), UsernamePasswordAuthenticationFilter.class) // 변경 있음
+                .addFilterBefore(new JwtAuthorizationFilter(jwtService, userDetailsService, userRepository), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtAuthenticationFilter(jwtService, authenticationManager), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
