@@ -4,13 +4,21 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.prac.music.domain.board.dto.BoardRequestDto;
 import com.prac.music.domain.board.dto.BoardResponseDto;
 import com.prac.music.domain.board.dto.UpdateRequestDto;
+import com.prac.music.domain.board.dto.UpdateResponseDto;
 import com.prac.music.domain.board.service.BoardService;
 import com.prac.music.security.UserDetailsImpl;
-
 
 @RestController
 @RequestMapping("/api/boards")
@@ -35,8 +43,8 @@ public class BoardController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable("id") Long id, @RequestBody UpdateRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-		BoardResponseDto responseDto = boardService.updateBoard(id, requestDto, userDetails.getUser());
+	public ResponseEntity<UpdateResponseDto> updateBoard(@PathVariable("id") Long id, @RequestBody UpdateRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+		UpdateResponseDto responseDto = boardService.updateBoard(id, requestDto, userDetails.getUser());
 		return ResponseEntity.ok(responseDto);
 	}
 
