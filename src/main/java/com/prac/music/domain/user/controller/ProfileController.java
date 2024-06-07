@@ -3,12 +3,16 @@ package com.prac.music.domain.user.controller;
 import com.prac.music.domain.user.dto.ProfileRequestDto;
 import com.prac.music.domain.user.dto.ProfileResponseDto;
 import com.prac.music.domain.user.service.ProfileService;
+import com.prac.music.domain.user.service.S3Service;
 import com.prac.music.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,9 +27,9 @@ public class ProfileController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @PutMapping
-    public ResponseEntity<String> updateProfile(@RequestBody @Valid ProfileRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String message = profileService.updateProfile(requestDto, userDetails.getUser());
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateProfile(@PathVariable UserDetailsImpl userDetails, @RequestPart(value = "user") @Valid ProfileRequestDto requestDto, @RequestPart(value = "file") MultipartFile file) throws IOException {
+        String message = profileService.updateProfile(requestDto, userDetails.getUser(), file);
         return ResponseEntity.ok(message);
     }
 }
