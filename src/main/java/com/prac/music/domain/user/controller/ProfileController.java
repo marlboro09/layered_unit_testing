@@ -3,10 +3,14 @@ package com.prac.music.domain.user.controller;
 import com.prac.music.domain.user.dto.ProfileRequestDto;
 import com.prac.music.domain.user.dto.ProfileResponseDto;
 import com.prac.music.domain.user.service.ProfileService;
+import com.prac.music.domain.user.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProfileController {
 
     private final ProfileService profileService;
+    private final S3Service s3Service;
 
     // **
     // 이후 Token 을 이용해 인증된 사용자의 정보를 가져오도록 코드 변경 예정
@@ -28,8 +33,9 @@ public class ProfileController {
     }
 
     @PutMapping
-    public ResponseEntity<String> updateProfile(@PathVariable String userId, @RequestBody @Valid ProfileRequestDto requestDto) {
-        String message = profileService.updateProfile(userId, requestDto);
+    public ResponseEntity<String> updateProfile(@PathVariable String userId, @RequestPart(value = "user") @Valid ProfileRequestDto requestDto, @RequestPart(value = "file") MultipartFile file) throws IOException {
+        String imageUrl = s3Service.s3Upload(file);
+        String message = profileService.updateProfile(userId, requestDto,imageUrl);
         return ResponseEntity.ok(message);
     }
 }

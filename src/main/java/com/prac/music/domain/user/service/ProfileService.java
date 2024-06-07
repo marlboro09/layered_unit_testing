@@ -24,13 +24,13 @@ public class ProfileService {
 
     // 유저 프로필 수정
     @Transactional
-    public String updateProfile(String userId, ProfileRequestDto requestDto) {
+    public String updateProfile(String userId, ProfileRequestDto requestDto, String imageUrl) {
         User user = findUserById(userId);
 
         // Dto 에 비밀번호가 들어왔을 경우
         validatePassword(requestDto.getPassword(), requestDto.getNewPassword(), user.getPassword());
 
-        user.update(requestDto);
+        user.update(requestDto,imageUrl);
         return "프로필이 수정되었습니다.";
     }
 

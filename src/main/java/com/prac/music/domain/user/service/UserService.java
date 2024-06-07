@@ -29,22 +29,22 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public User createUser(SignupRequestDto requestDto) {
+    public User createUser(SignupRequestDto requestDto, String imageUrl) {
         String userId = requestDto.getUserId();
         String password = passwordEncoder.encode(requestDto.getPassword());
         requestDto.setPassword(password);
 
         Optional<User> checkUser = userRepository.findByUserId(userId);
 
-        if(checkUser.isPresent()){
+        if (checkUser.isPresent()) {
             throw new IllegalArgumentException("이미 중복된 사용자가 존재합니다.");
         }
 
-        User user = new User(requestDto);
+        User user = new User(requestDto, imageUrl);
         return userRepository.save(user);
     }
 
-    public LoginResponseDto loginUser(@RequestBody LoginRequestDto requestDto){
+    public LoginResponseDto loginUser(@RequestBody LoginRequestDto requestDto) {
         User user = this.userRepository.findByUserId(requestDto.getUserId()).orElseThrow(
                 () -> new UsernameNotFoundException("아이디를 다시 확인해주세요")
         );
@@ -76,8 +76,8 @@ public class UserService {
 
         String password = requestDto.getPassword();
 
-        System.out.println("사용자 비밀번호 : "+ user.getPassword());
-        System.out.println("입력된 비밀번호 : "+ password);
+        System.out.println("사용자 비밀번호 : " + user.getPassword());
+        System.out.println("입력된 비밀번호 : " + password);
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
