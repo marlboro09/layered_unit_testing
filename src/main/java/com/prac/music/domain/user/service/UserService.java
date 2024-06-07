@@ -18,7 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -28,12 +30,18 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final S3Service s3Service;
 
-    public User createUser(SignupRequestDto requestDto, String imageUrl) {
+    public User createUser(SignupRequestDto requestDto, MultipartFile file) throws IOException {
         String userId = requestDto.getUserId();
         String password = passwordEncoder.encode(requestDto.getPassword());
         requestDto.setPassword(password);
-
+        String imageUrl = "";
+        if(file != null && !file.isEmpty()) {
+          imageUrl = s3Service.s3Upload(file);
+        } else{
+            imageUrl = "null";
+        }
         Optional<User> checkUser = userRepository.findByUserId(userId);
 
         if (checkUser.isPresent()) {

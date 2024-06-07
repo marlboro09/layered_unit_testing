@@ -22,12 +22,10 @@ import java.io.IOException;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
-    private final S3Service s3Service;
 
     @PostMapping("/signup")
     public ResponseEntity<User> signup(@Valid @RequestPart(value = "user") SignupRequestDto requestDto, @RequestPart(value = "file") MultipartFile file) throws IOException {
-        String imageUrl = s3Service.s3Upload(file);
-        return ResponseEntity.ok(userService.createUser(requestDto, imageUrl));
+        return ResponseEntity.ok(userService.createUser(requestDto, file));
     }
 
     @PostMapping("/login")

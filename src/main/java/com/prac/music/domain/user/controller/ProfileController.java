@@ -20,7 +20,6 @@ import java.io.IOException;
 public class ProfileController {
 
     private final ProfileService profileService;
-    private final S3Service s3Service;
 
     @GetMapping
     public ResponseEntity<ProfileResponseDto> getProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -28,10 +27,9 @@ public class ProfileController {
         return ResponseEntity.ok(responseDto);
     }
 
-
-    public ResponseEntity<String> updateProfile(@PathVariable String userId, @RequestPart(value = "user") @Valid ProfileRequestDto requestDto, @RequestPart(value = "file") MultipartFile file) throws IOException {
-        String imageUrl = s3Service.s3Upload(file);
-        String message = profileService.updateProfile(userId, requestDto,imageUrl);
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateProfile(@PathVariable UserDetailsImpl userDetails, @RequestPart(value = "user") @Valid ProfileRequestDto requestDto, @RequestPart(value = "file") MultipartFile file) throws IOException {
+        String message = profileService.updateProfile(requestDto, userDetails.getUser(), file);
         return ResponseEntity.ok(message);
     }
 }

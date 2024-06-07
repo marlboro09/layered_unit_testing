@@ -62,10 +62,11 @@ public class User extends BaseTimeEntity {
         this.userStatusEnum = UserStatusEnum.NORMAL;
     }
 
-    public void update(ProfileRequestDto requestDto) {
+    public void update(ProfileRequestDto requestDto,String profileImage) {
       this.name = requestDto.getName();
       this.email = requestDto.getEmail();
       this.intro = requestDto.getIntro();
+      this.profileImage = profileImage;
     }
 
     public void update(ProfileRequestDto requestDto, String encodedPasswdDto,String profileImage) {
