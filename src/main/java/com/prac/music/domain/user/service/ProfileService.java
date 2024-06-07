@@ -19,16 +19,15 @@ public class ProfileService {
     private final PasswordEncoder passwordEncoder;
 
     // 유저 프로필 조회
-    public ProfileResponseDto getProfile(String userId) {
-        User user = findUserById(userId);
-        return new ProfileResponseDto(user);
+    public ProfileResponseDto getProfile(User user) {
+        User getUser = findUserById(user.getUserId());
+        return new ProfileResponseDto(getUser);
     }
 
     // 유저 프로필 수정
     @Transactional
-    public String updateProfile(String userId, ProfileRequestDto requestDto) {
-        User user = findUserById(userId);
-
+    public String updateProfile(ProfileRequestDto requestDto, User user) {
+        User getUser = findUserById(user.getUserId());
 
         // Dto 에 비밀번호가 들어왔는지 검사
         Boolean ckePassword = validatePassword(requestDto.getPassword(), requestDto.getNewPassword(), getUser.getPassword());
@@ -48,7 +47,7 @@ public class ProfileService {
     // 해당 유저 조희
     private User findUserById(String userId) {
         return userRepository.findByUserId(userId).orElseThrow(()->
-            new EntityNotFoundException("등록된 회원이 아닙니다.")
+                new EntityNotFoundException("등록된 회원이 아닙니다.")
         );
     }
 
@@ -57,10 +56,10 @@ public class ProfileService {
         if (StringUtils.isBlank(password) && StringUtils.isBlank(newPassword)) {
             return false; // 둘 다 비어있으면 검사하지 않음
         }
-        if (!StringUtils.isBlank(password)) {
+        if (StringUtils.isBlank(password)) {
             throw new NullPointerException("현재 비밀번호를 입력해주세요");
         }
-        if (!StringUtils.isBlank(newPassword)) {
+        if (StringUtils.isBlank(newPassword)) {
             throw new NullPointerException("새 비밀번호를 입력해주세요");
         }
         if (!passwordEncoder.matches(password, userPassword)) {
