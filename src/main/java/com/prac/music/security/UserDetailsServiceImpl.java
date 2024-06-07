@@ -19,6 +19,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByUserId(userId)
             .orElseThrow(() -> new UsernameNotFoundException("Not Found " + userId));
 
+        if (!user.isExist()) {
+            throw new IllegalArgumentException("User : " + userId + " is not Exist");
+        }
+
         return new UserDetailsImpl(user);
     }
 }
