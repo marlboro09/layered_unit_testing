@@ -5,6 +5,7 @@ import com.prac.music.domain.user.dto.LoginResponseDto;
 import com.prac.music.domain.user.dto.SignoutRequestDto;
 import com.prac.music.domain.user.dto.SignupRequestDto;
 import com.prac.music.domain.user.entity.User;
+import com.prac.music.domain.user.service.S3Service;
 import com.prac.music.domain.user.service.UserService;
 import com.prac.music.domain.user.security.UserDetailsImpl;
 import jakarta.validation.Valid;
@@ -12,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,12 +24,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(@Valid @RequestBody SignupRequestDto requestDto){
-        return ResponseEntity.ok(userService.createUser(requestDto));
+    public ResponseEntity<User> signup(@Valid @RequestPart(value = "user") SignupRequestDto requestDto, @RequestPart(value = "file") MultipartFile file) throws IOException {
+        return ResponseEntity.ok(userService.createUser(requestDto, file));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto){
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto) {
         System.out.println("로그인 시작");
 
         return ResponseEntity.ok(userService.loginUser(requestDto));

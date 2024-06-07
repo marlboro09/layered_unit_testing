@@ -2,10 +2,15 @@ package com.prac.music.domain.user.entity;
 
 import com.prac.music.domain.user.dto.SignupRequestDto;
 import com.prac.music.domain.user.dto.ProfileRequestDto;
-import io.micrometer.common.util.StringUtils;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-import jakarta.persistence.*;
 import lombok.*;
+
 
 @Entity
 @Getter
@@ -39,28 +44,37 @@ public class User extends BaseTimeEntity {
     @Column(name = "refresh_token")
     private String refreshToken;
 
+    @Column(name = "profile_Image")
+    private String profileImage;
+
 
     public boolean isExist() {
         return this.userStatusEnum == UserStatusEnum.NORMAL;
     }
 
-    public User(SignupRequestDto requestDto) {
+    public User(SignupRequestDto requestDto,String profileImage) {
         this.userId = requestDto.getUserId();
         this.name = requestDto.getName();
         this.email = requestDto.getEmail();
         this.password = requestDto.getPassword();
         this.intro = requestDto.getIntro();
+        this.profileImage = profileImage;
         this.userStatusEnum = UserStatusEnum.NORMAL;
     }
 
-    public void update(ProfileRequestDto requestDto) {
-        this.name = requestDto.getName();
-        this.email = requestDto.getEmail();
-        this.intro = requestDto.getIntro();
-        // 비밀번호가 비어있지 않은 경우에만 업데이트
-        if (StringUtils.isNotBlank(requestDto.getNewPassword())) {
-            this.password = requestDto.getNewPassword();
-        }
+    public void update(ProfileRequestDto requestDto,String profileImage) {
+      this.name = requestDto.getName();
+      this.email = requestDto.getEmail();
+      this.intro = requestDto.getIntro();
+      this.profileImage = profileImage;
+    }
+
+    public void update(ProfileRequestDto requestDto, String encodedPasswdDto,String profileImage) {
+      this.name = requestDto.getName();
+      this.email = requestDto.getEmail();
+      this.intro = requestDto.getIntro();
+      this.password = encodedPasswdDto;
+      this.profileImage = profileImage;
     }
 
     public void updateRefresh(String refreshToken){
