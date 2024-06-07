@@ -2,7 +2,9 @@ package com.prac.music.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prac.music.domain.user.dto.LoginRequestDto;
+import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.entity.UserStatusEnum;
+import com.prac.music.domain.user.repository.UserRepository;
 import com.prac.music.domain.user.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,10 +22,12 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
 
-    public JwtAuthenticationFilter(JwtService jwtService, AuthenticationManager authenticationManager) {
+    public JwtAuthenticationFilter(JwtService jwtService, AuthenticationManager authenticationManager, UserRepository userRepository) {
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
         setFilterProcessesUrl("/api/user/login");
     }
 
@@ -47,11 +51,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
-        String userId = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
-        UserStatusEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getUserStatusEnum();
+        User user = ((UserDetailsImpl) authResult.getPrincipal()).getUser();
+        String userId = user.getUserId();
 
         String token = jwtService.createToken(userId);
+        String refreshToken = jwtService.createRefreshToken(userId);
+
         response.addHeader(JwtService.AUTHORIZATION_HEADER, token);
+        response.addHeader(JwtService.REFRESH_TOKEN_HEADER, refreshToken);
+
+        user.setRefreshToken(refreshToken);
+        userRepository.save(user);
     }
 
     @Override
