@@ -9,8 +9,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Data
 @Getter
@@ -43,8 +41,8 @@ public class User extends BaseTimeEntity {
     private String refreshToken;
 
 
-    public boolean isAdmin() {
-        return this.userStatusEnum == UserStatusEnum.SECESSION;
+    public boolean isExist() {
+        return this.userStatusEnum == UserStatusEnum.NORMAL;
     }
 
     public User(SignupRequestDto requestDto) {

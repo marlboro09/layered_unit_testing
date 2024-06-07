@@ -2,6 +2,8 @@ package com.prac.music.security;
 
 import java.io.IOException;
 
+import com.prac.music.domain.user.entity.User;
+import com.prac.music.domain.user.repository.UserRepository;
 import com.prac.music.domain.user.service.JwtService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,10 +25,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsServiceImpl userDetailsService;
+    private final UserRepository userRepository;
 
-    public JwtAuthorizationFilter(JwtService jwtService, UserDetailsServiceImpl userDetailsService) {
+    public JwtAuthorizationFilter(JwtService jwtService, UserDetailsServiceImpl userDetailsService, UserRepository userRepository) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -34,6 +38,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         String tokenValue = jwtService.getJwtFromHeader(req);
 
+        log.info(tokenValue);
         if (StringUtils.hasText(tokenValue)) {
 
             if (!jwtService.validateToken(tokenValue)) {
@@ -41,18 +46,53 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            Claims info = jwtService.getUserInfoFromToken(tokenValue);
+            Claims claims = jwtService.getUserInfoFromToken(tokenValue);
+            log.info("Subject: " + claims.getSubject());
+            String userId = claims.getSubject();
 
-            try {
-                setAuthentication(info.getSubject());
-            } catch (Exception e) {
-                log.error(e.getMessage());
-                return;
+            // 사용자 조회
+            User user = userRepository.findByUserId(userId).orElseThrow(
+                    () -> new IllegalArgumentException("사용자를 찾을 수 없습니다.")
+            );
+
+            if(!user.isExist()){
+                throw new IllegalStateException("탈퇴된 사용자입니다.");
+            }
+
+            String userRefreshToken = jwtService.substringToken(user.getRefreshToken());
+            String refreshToken = jwtService.getRefreshJwtFromHeader(req);
+
+            log.info("User's Refresh Token: " + userRefreshToken);
+            log.info("response's Refresh Token: " + refreshToken);
+
+            // 유저가 보유한 토큰과 httpservlet의 토큰이 같은지 비교
+            if (userRefreshToken.equals(refreshToken)) {
+                // 토큰이 만료된 경우
+                if (jwtService.isTokenExpired(tokenValue)) {
+                    // 리프레시 토큰이 유효한 경우, 새로운 토큰 생성
+                    if (!jwtService.isRefreshTokenExpired(userRefreshToken)) {
+                        jwtService.createToken(user.getUserId());
+                        System.out.println("jwtService.createToken(user.getUserId()) = " + jwtService.createToken(user.getUserId()));
+                        jwtService.createRefreshToken(user.getUserId());
+                        log.info("새로운 토큰이 생성되었습니다.");
+                        setAuthentication(claims.getSubject());
+                        filterChain.doFilter(req, res);
+                    } else {
+                        // 리프레시 토큰도 만료된 경우
+                        throw new IllegalArgumentException("다시 재로그인해주세요");
+                    }
+                } else {
+                    // 토큰이 유효한 경우
+                    setAuthentication(claims.getSubject());
+                }
+            } else {
+                throw new IllegalArgumentException("토큰의 정보가 일치하지 않습니다.");
             }
         }
 
         filterChain.doFilter(req, res);
     }
+
 
     // 인증 처리
     public void setAuthentication(String username) {

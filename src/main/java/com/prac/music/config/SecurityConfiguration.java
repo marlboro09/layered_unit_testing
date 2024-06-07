@@ -1,5 +1,6 @@
 package com.prac.music.config;
 
+import com.prac.music.domain.user.repository.UserRepository;
 import com.prac.music.domain.user.service.JwtService;
 import com.prac.music.security.JwtAuthenticationFilter;
 import com.prac.music.security.JwtAuthorizationFilter;
@@ -32,6 +33,7 @@ public class SecurityConfiguration {
     private final JwtService jwtService;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final UserRepository userRepository;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -42,12 +44,14 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/users/login", "/api/users/signup"
+                                "/v2/api-docs", "/v3/api-docs", "/v3/api-docs/**", "/swagger-resources",
+                                "/swagger-resources/**", "/configuration/ui", "/configuration/security", "/swagger-ui/**",
+                                "/webjars/**", "/swagger-ui.html", "/api/users/login", "/api/users/signup", "/api/boards/list"
                                 ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new JwtAuthorizationFilter(jwtService, userDetailsService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtAuthenticationFilter(jwtService, authenticationManager), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthorizationFilter(jwtService, userDetailsService, userRepository), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtService, authenticationManager, userRepository), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
