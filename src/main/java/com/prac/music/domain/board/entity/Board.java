@@ -1,5 +1,6 @@
 package com.prac.music.domain.board.entity;
 
+import com.prac.music.domain.user.entity.BaseTimeEntity;
 import com.prac.music.domain.user.entity.User;
 
 import jakarta.persistence.*;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본 생성자는 protected로 설정합니다.
 @Entity
 @Table(name = "board")
-public class Board {
+public class Board extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -26,23 +27,15 @@ public class Board {
 	@JoinColumn(nullable = false, name = "user_id")
 	private User user;
 
-	@Column(nullable = false, name = "createdAt")
-	private LocalDateTime createAt;
-
-	@Column(nullable = false, name = "updatedAt")
-	private LocalDateTime updatedAt;
-
 	@Builder
 	public Board(String title, String contents, User user) {
 		this.title = title;
 		this.contents = contents;
 		this.user = user;
-		this.createAt = LocalDateTime.now();
-		this.updatedAt = LocalDateTime.now();
 	}
 
-	public void update(String contents) {
+	public void update(String title, String contents) {
+		this.title = title;
 		this.contents = contents;
-		this.updatedAt = LocalDateTime.now();
 	}
 }
