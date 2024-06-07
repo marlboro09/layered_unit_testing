@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +20,7 @@ public class ProfileService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final S3Service s3Service;
 
     // 유저 프로필 조회
     public ProfileResponseDto getProfile(User user) {
@@ -26,18 +30,24 @@ public class ProfileService {
 
     // 유저 프로필 수정
     @Transactional
-    public String updateProfile(ProfileRequestDto requestDto, User user) {
+    public String updateProfile(ProfileRequestDto requestDto, User user, MultipartFile file) throws IOException {
         User getUser = findUserById(user.getUserId());
+        String imageUrl = "";
 
         // Dto 에 비밀번호가 들어왔는지 검사
         Boolean ckePassword = validatePassword(requestDto.getPassword(), requestDto.getNewPassword(), getUser.getPassword());
+        if(file != null && !file.isEmpty()) {
+            imageUrl = s3Service.s3Upload(file);
+        } else{
+            imageUrl = "null";
+        }
 
         // 비밀번호 인코딩 후 업데이트
         if (ckePassword) {
             String encodedPassword = passwordEncoder.encode(requestDto.getNewPassword());
-            getUser.update(requestDto, encodedPassword);
+            getUser.update(requestDto, encodedPassword,imageUrl);
         } else {
-            getUser.update(requestDto);
+            getUser.update(requestDto,imageUrl);
         }
 
         return "프로필이 수정되었습니다.";
@@ -47,7 +57,7 @@ public class ProfileService {
     // 해당 유저 조희
     private User findUserById(String userId) {
         return userRepository.findByUserId(userId).orElseThrow(()->
-                new EntityNotFoundException("등록된 회원이 아닙니다.")
+            new EntityNotFoundException("등록된 회원이 아닙니다.")
         );
     }
 
