@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.repository.UserRepository;
+import com.prac.music.domain.user.security.UserDetailsServiceImpl;
 import com.prac.music.domain.user.service.JwtService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

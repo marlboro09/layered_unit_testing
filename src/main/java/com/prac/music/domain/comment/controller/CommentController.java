@@ -9,7 +9,7 @@ import com.prac.music.domain.comment.dto.CommentResponseDto;
 import com.prac.music.domain.comment.dto.CommentUpdateRequestDto;
 import com.prac.music.domain.comment.dto.CommentUpdateResponseDto;
 import com.prac.music.domain.comment.service.CommentService;
-import com.prac.music.security.UserDetailsImpl;
+import com.prac.music.domain.user.security.UserDetailsImpl;
 
 @RestController
 @RequestMapping("/api/boards/{boardId}/comments")

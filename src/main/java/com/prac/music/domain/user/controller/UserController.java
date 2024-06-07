@@ -6,7 +6,7 @@ import com.prac.music.domain.user.dto.SignoutRequestDto;
 import com.prac.music.domain.user.dto.SignupRequestDto;
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.service.UserService;
-import com.prac.music.security.UserDetailsImpl;
+import com.prac.music.domain.user.security.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

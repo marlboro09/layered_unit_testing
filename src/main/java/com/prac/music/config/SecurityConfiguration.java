@@ -4,7 +4,7 @@ import com.prac.music.domain.user.repository.UserRepository;
 import com.prac.music.domain.user.service.JwtService;
 import com.prac.music.security.JwtAuthenticationFilter;
 import com.prac.music.security.JwtAuthorizationFilter;
-import com.prac.music.security.UserDetailsServiceImpl;
+import com.prac.music.domain.user.security.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
