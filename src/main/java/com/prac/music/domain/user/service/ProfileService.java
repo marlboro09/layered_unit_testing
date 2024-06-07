@@ -7,6 +7,7 @@ import com.prac.music.domain.user.repository.UserRepository;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,22 +16,31 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfileService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // 유저 프로필 조회
-    public ProfileResponseDto getProfile(String userId) {
-        User user = findUserById(userId);
-        return new ProfileResponseDto(user);
+    public ProfileResponseDto getProfile(User user) {
+        User getUser = findUserById(user.getUserId());
+        return new ProfileResponseDto(getUser);
     }
 
     // 유저 프로필 수정
     @Transactional
-    public String updateProfile(String userId, ProfileRequestDto requestDto, String imageUrl) {
-        User user = findUserById(userId);
+    public String updateProfile(ProfileRequestDto requestDto, User user,String imageUrl) {
+        User getUser = findUserById(user.getUserId());
 
-        // Dto 에 비밀번호가 들어왔을 경우
-        validatePassword(requestDto.getPassword(), requestDto.getNewPassword(), user.getPassword());
+        // Dto 에 비밀번호가 들어왔는지 검사
+        Boolean ckePassword = validatePassword(requestDto.getPassword(), requestDto.getNewPassword(), getUser.getPassword());
 
-        user.update(requestDto,imageUrl);
+
+        // 비밀번호 인코딩 후 업데이트
+        if (ckePassword) {
+            String encodedPassword = passwordEncoder.encode(requestDto.getNewPassword());
+            getUser.update(requestDto, encodedPassword);
+        } else {
+            getUser.update(requestDto,imageUrl);
+        }
+
         return "프로필이 수정되었습니다.";
     }
 
@@ -43,21 +53,22 @@ public class ProfileService {
     }
 
     // 비밀번호 유효성 검사
-    private void validatePassword(String password, String newPassword, String userPassword) {
+    private Boolean validatePassword(String password, String newPassword, String userPassword) {
         if (StringUtils.isBlank(password) && StringUtils.isBlank(newPassword)) {
-            return; // 둘 다 비어있으면 검사하지 않음
+            return false; // 둘 다 비어있으면 검사하지 않음
         }
-        if (!StringUtils.isBlank(password)) {
+        if (StringUtils.isBlank(password)) {
             throw new NullPointerException("현재 비밀번호를 입력해주세요");
         }
-        if (!StringUtils.isBlank(newPassword)) {
+        if (StringUtils.isBlank(newPassword)) {
             throw new NullPointerException("새 비밀번호를 입력해주세요");
         }
-        if (!userPassword.equals(password)) {
+        if (!passwordEncoder.matches(password, userPassword)) {
             throw new IllegalArgumentException("현재 비밀번호와 일치하지 않습니다.");
         }
-        if (userPassword.equals(password)) {
+        if (passwordEncoder.matches(newPassword, userPassword)) {
             throw new IllegalArgumentException("현재 비밀번호와 동일한 비밀번호로는 변경할 수 없습니다.");
         }
+        return true;
     }
 }

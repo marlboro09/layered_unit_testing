@@ -2,9 +2,13 @@ package com.prac.music.domain.user.entity;
 
 import com.prac.music.domain.user.dto.SignupRequestDto;
 import com.prac.music.domain.user.dto.ProfileRequestDto;
-import io.micrometer.common.util.StringUtils;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,14 +62,17 @@ public class User extends BaseTimeEntity {
         this.userStatusEnum = UserStatusEnum.NORMAL;
     }
 
-    public void update(ProfileRequestDto requestDto, String profileImage) {
-        this.name = requestDto.getName();
-        this.email = requestDto.getEmail();
-        this.intro = requestDto.getIntro();
-        this.profileImage = profileImage;
-        // 비밀번호가 비어있지 않은 경우에만 업데이트
-        if (StringUtils.isNotBlank(requestDto.getNewPassword())) {
-            this.password = requestDto.getNewPassword();
-        }
+    public void update(ProfileRequestDto requestDto) {
+      this.name = requestDto.getName();
+      this.email = requestDto.getEmail();
+      this.intro = requestDto.getIntro();
+    }
+
+    public void update(ProfileRequestDto requestDto, String encodedPasswdDto,String profileImage) {
+      this.name = requestDto.getName();
+      this.email = requestDto.getEmail();
+      this.intro = requestDto.getIntro();
+      this.password = encodedPasswdDto;
+      this.profileImage = profileImage;
     }
 }
