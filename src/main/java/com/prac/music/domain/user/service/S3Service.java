@@ -44,6 +44,12 @@ public class S3Service {
                 return "image/jpg";
             case "png":
                 return "image/png";
+            case "mp4":
+                return "video/mp4";
+            case "avi":
+                return "video/x-msvideo";
+            case "mov":
+                return "video/quicktime";
             default:
                 throw new IllegalArgumentException("적절한 확장자가 아닙니다.");
         }
