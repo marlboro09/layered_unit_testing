@@ -22,7 +22,7 @@ import com.prac.music.domain.board.dto.BoardResponseDto;
 import com.prac.music.domain.board.dto.UpdateRequestDto;
 import com.prac.music.domain.board.dto.UpdateResponseDto;
 import com.prac.music.domain.board.service.BoardService;
-import com.prac.music.security.UserDetailsImpl;
+import com.prac.music.domain.user.security.UserDetailsImpl;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;

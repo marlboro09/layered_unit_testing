@@ -64,7 +64,7 @@ public class UserService {
 
         String token = jwtService.createToken(requestDto.getUserId());
         String refreshToken = jwtService.createRefreshToken(requestDto.getUserId());
-        user.setRefreshToken(refreshToken);
+        user.updateRefresh(refreshToken);
         userRepository.save(user);
 
         return new LoginResponseDto(token, refreshToken, "로그인에 성공했습니다.");
@@ -72,7 +72,7 @@ public class UserService {
 
     @Transactional
     public void logoutUser(User user) {
-        user.setRefreshToken(null);
+        user.updateRefresh(null);
         userRepository.save(user);
     }
 
@@ -91,7 +91,7 @@ public class UserService {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
 
-        user.setUserStatusEnum(UserStatusEnum.SECESSION);
+        user.updateStatus();
         userRepository.save(user);
     }
 }

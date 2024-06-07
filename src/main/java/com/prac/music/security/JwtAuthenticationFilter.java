@@ -3,8 +3,8 @@ package com.prac.music.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prac.music.domain.user.dto.LoginRequestDto;
 import com.prac.music.domain.user.entity.User;
-import com.prac.music.domain.user.entity.UserStatusEnum;
 import com.prac.music.domain.user.repository.UserRepository;
+import com.prac.music.domain.user.security.UserDetailsImpl;
 import com.prac.music.domain.user.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,11 +37,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
 
             return authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    requestDto.getUserId(),
-                    requestDto.getPassword(),
-                    null
-                )
+                    new UsernamePasswordAuthenticationToken(
+                            requestDto.getUserId(),
+                            requestDto.getPassword(),
+                            null
+                    )
             );
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -60,7 +60,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.addHeader(JwtService.AUTHORIZATION_HEADER, token);
         response.addHeader(JwtService.REFRESH_TOKEN_HEADER, refreshToken);
 
-        user.setRefreshToken(refreshToken);
+        user.updateRefresh(refreshToken);
         userRepository.save(user);
     }
 

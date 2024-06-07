@@ -1,4 +1,4 @@
-package com.prac.music.security;
+package com.prac.music.domain.user.security;
 
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.entity.UserStatusEnum;
