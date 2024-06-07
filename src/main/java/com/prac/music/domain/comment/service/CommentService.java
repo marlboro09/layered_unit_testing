@@ -14,7 +14,6 @@ import com.prac.music.domain.comment.repository.CommentRepository;
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.repository.UserRepository;
 import com.prac.music.exception.CommentNotFoundException;
-import com.prac.music.exception.CommentRuntimeException;
 import com.prac.music.exception.UnauthorizedAccessException;
 
 import lombok.RequiredArgsConstructor;
@@ -40,7 +39,8 @@ public class CommentService {
 			.user(persistentUser)
 			.build();
 
-		return new CommentResponseDto(saveComment(comment, "댓글 저장 완료"));
+		Comment savedComment = commentRepository.save(comment);
+		return new CommentResponseDto(savedComment);
 	}
 
 	@Transactional
@@ -51,7 +51,8 @@ public class CommentService {
 		validateUserAuthorization(comment, persistentUser);
 
 		comment.update(requestDto.getContents());
-		return new CommentUpdateResponseDto(saveComment(comment, "댓글 수정"));
+		Comment updatedComment = commentRepository.save(comment);
+		return new CommentUpdateResponseDto(updatedComment);
 	}
 
 	@Transactional
@@ -61,11 +62,7 @@ public class CommentService {
 
 		validateUserAuthorization(comment, persistentUser);
 
-		try {
-			commentRepository.delete(comment);
-		} catch (Exception e) {
-			throw new CommentRuntimeException("댓글 삭제에 실패했습니다.");
-		}
+		commentRepository.delete(comment);
 	}
 
 	private Comment findCommentById(Long commentId) {
@@ -81,15 +78,6 @@ public class CommentService {
 	private Board findBoardById(Long boardId) {
 		return boardRepository.findById(boardId)
 			.orElseThrow(() -> new CommentNotFoundException("게시글을 찾을 수 없습니다."));
-	}
-
-	private Comment saveComment(Comment comment, String logMessage) {
-		try {
-			Comment savedComment = commentRepository.save(comment);
-			return savedComment;
-		} catch (Exception e) {
-			throw new CommentRuntimeException("댓글 저장에 실패했습니다.");
-		}
 	}
 
 	private void validateUserAuthorization(Comment comment, User user) {
