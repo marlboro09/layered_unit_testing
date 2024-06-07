@@ -2,7 +2,6 @@ package com.prac.music.domain.board.controller;
 
 import java.util.List;
 
-import org.slf4j.Logger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -25,18 +24,17 @@ import com.prac.music.domain.board.dto.UpdateResponseDto;
 import com.prac.music.domain.board.service.BoardService;
 import com.prac.music.security.UserDetailsImpl;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
+@RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/boards")
 public class BoardController {
 
 	private final BoardService boardService;
-
-	public BoardController(BoardService boardService) {
-		this.boardService = boardService;
-	}
 
 	@PostMapping
 	public ResponseEntity<BoardResponseDto> createBoard(@RequestBody BoardRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -63,9 +61,9 @@ public class BoardController {
 	}
 
 	@GetMapping("/paging")
-	public ResponseEntity<Page<BoardResponseDto>> paging(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+	public ResponseEntity<Page<BoardResponseDto>> paging(
+		@Parameter(hidden = true) @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 		Page<BoardResponseDto> postsPages = boardService.paging(pageable);
-		log.debug("pageable : {}", pageable);
 		return ResponseEntity.ok(postsPages);
 	}
 }
