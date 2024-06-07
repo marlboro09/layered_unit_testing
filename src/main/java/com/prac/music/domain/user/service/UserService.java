@@ -36,7 +36,7 @@ public class UserService {
 
         Optional<User> checkUser = userRepository.findByUserId(userId);
 
-        if(checkUser.isPresent()){
+        if (checkUser.isPresent()) {
             throw new IllegalArgumentException("이미 중복된 사용자가 존재합니다.");
         }
 
@@ -44,7 +44,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public LoginResponseDto loginUser(@RequestBody LoginRequestDto requestDto){
+    public LoginResponseDto loginUser(@RequestBody LoginRequestDto requestDto) {
         User user = this.userRepository.findByUserId(requestDto.getUserId()).orElseThrow(
                 () -> new UsernameNotFoundException("아이디를 다시 확인해주세요")
         );
@@ -56,7 +56,7 @@ public class UserService {
 
         String token = jwtService.createToken(requestDto.getUserId());
         String refreshToken = jwtService.createRefreshToken(requestDto.getUserId());
-        user.setRefreshToken(refreshToken);
+        user.updateRefresh(refreshToken);
         userRepository.save(user);
 
         return new LoginResponseDto(token, refreshToken, "로그인에 성공했습니다.");
@@ -64,7 +64,7 @@ public class UserService {
 
     @Transactional
     public void logoutUser(User user) {
-        user.setRefreshToken(null);
+        user.updateRefresh(null);
         userRepository.save(user);
     }
 
@@ -76,14 +76,14 @@ public class UserService {
 
         String password = requestDto.getPassword();
 
-        System.out.println("사용자 비밀번호 : "+ user.getPassword());
-        System.out.println("입력된 비밀번호 : "+ password);
+        System.out.println("사용자 비밀번호 : " + user.getPassword());
+        System.out.println("입력된 비밀번호 : " + password);
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
 
-        user.setUserStatusEnum(UserStatusEnum.SECESSION);
+        user.updateStatus();
         userRepository.save(user);
     }
 }

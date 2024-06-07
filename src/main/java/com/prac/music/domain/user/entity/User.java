@@ -5,15 +5,14 @@ import com.prac.music.domain.user.dto.ProfileRequestDto;
 import io.micrometer.common.util.StringUtils;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
 @Getter
+@Builder
 @Table(name = "user")
 @NoArgsConstructor
+@AllArgsConstructor
 public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,4 +62,13 @@ public class User extends BaseTimeEntity {
             this.password = requestDto.getNewPassword();
         }
     }
+
+    public void updateRefresh(String refreshToken){
+        this.refreshToken = refreshToken;
+    }
+
+    public void updateStatus(){
+        this.userStatusEnum = UserStatusEnum.SECESSION;
+    }
+
 }
