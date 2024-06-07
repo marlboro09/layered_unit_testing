@@ -27,7 +27,7 @@ public class Board {
 	private User user;
 
 	@Column(nullable = false, name = "createdAt")
-	private LocalDateTime createAt;
+	private LocalDateTime createdAt;
 
 	@Column(nullable = false, name = "updatedAt")
 	private LocalDateTime updatedAt;
@@ -37,7 +37,7 @@ public class Board {
 		this.title = title;
 		this.contents = contents;
 		this.user = user;
-		this.createAt = LocalDateTime.now();
+		this.createdAt = LocalDateTime.now();
 		this.updatedAt = LocalDateTime.now();
 	}
 
