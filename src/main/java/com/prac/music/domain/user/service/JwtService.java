@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -65,6 +66,8 @@ public class JwtService {
             log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
         } catch (IllegalArgumentException e) {
             log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
+        } catch (ExpiredJwtException e){
+            throw new AccessDeniedException("재로그인 해주세요");
         }
         return false;
     }

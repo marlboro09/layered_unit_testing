@@ -9,15 +9,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 
 @Entity
-@Data
 @Getter
+@Builder
 @Table(name = "user")
 @NoArgsConstructor
+@AllArgsConstructor
 public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,4 +76,13 @@ public class User extends BaseTimeEntity {
       this.password = encodedPasswdDto;
       this.profileImage = profileImage;
     }
+
+    public void updateRefresh(String refreshToken){
+        this.refreshToken = refreshToken;
+    }
+
+    public void updateStatus(){
+        this.userStatusEnum = UserStatusEnum.SECESSION;
+    }
+
 }

@@ -17,7 +17,6 @@ import com.prac.music.domain.board.repository.BoardRepository;
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.repository.UserRepository;
 import com.prac.music.exception.BoardNotFoundException;
-import com.prac.music.exception.BoardRuntimeException;
 import com.prac.music.exception.UnauthorizedAccessException;
 
 import lombok.RequiredArgsConstructor;
@@ -40,7 +39,8 @@ public class BoardService {
 			.user(persistentUser)
 			.build();
 
-		return new BoardResponseDto(saveBoard(board, "게시글 저장 완료"));
+		Board savedBoard = boardRepository.save(board);
+		return new BoardResponseDto(savedBoard);
 	}
 
 	@Transactional
@@ -51,7 +51,8 @@ public class BoardService {
 		validateUserAuthorization(board, persistentUser);
 
 		board.update(requestDto.getTitle(), requestDto.getContents());
-		return new UpdateResponseDto(saveBoard(board, "게시글 수정 완료"));
+		Board updatedBoard = boardRepository.save(board);
+		return new UpdateResponseDto(updatedBoard);
 	}
 
 	@Transactional
@@ -61,11 +62,7 @@ public class BoardService {
 
 		validateUserAuthorization(board, persistentUser);
 
-		try {
-			boardRepository.delete(board);
-		} catch (Exception e) {
-			throw new BoardRuntimeException("게시글 삭제에 실패했습니다.");
-		}
+		boardRepository.delete(board);
 	}
 
 	@Transactional(readOnly = true)
@@ -94,15 +91,6 @@ public class BoardService {
 	private void validateUserAuthorization(Board board, User user) {
 		if (!board.getUser().equals(user)) {
 			throw new UnauthorizedAccessException("권한이 없습니다.");
-		}
-	}
-
-	private Board saveBoard(Board board, String logMessage) {
-		try {
-			Board savedBoard = boardRepository.save(board);
-			return savedBoard;
-		} catch (Exception e) {
-			throw new BoardRuntimeException(logMessage + " 중 오류가 발생하였습니다.");
 		}
 	}
 }
