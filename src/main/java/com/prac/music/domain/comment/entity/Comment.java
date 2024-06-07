@@ -1,9 +1,7 @@
 package com.prac.music.domain.comment.entity;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-
 import com.prac.music.domain.board.entity.Board;
+import com.prac.music.domain.user.entity.BaseTimeEntity;
 import com.prac.music.domain.user.entity.User;
 
 import jakarta.persistence.Column;
@@ -22,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "comment")
 @NoArgsConstructor
-public class Comment {
+public class Comment extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,12 +28,6 @@ public class Comment {
 
 	@Column(nullable = false)
 	private String contents;
-
-	@Column
-	private LocalDateTime createdAt;
-
-	@Column
-	private LocalDateTime updatedAt;
 
 	@ManyToOne
 	@JoinColumn(name = "board_id", nullable = false)
@@ -50,12 +42,9 @@ public class Comment {
 		this.contents = contents;
 		this.user = user;
 		this.board = board;
-		this.createdAt = LocalDateTime.now();
 	}
 
 	public void update(String contents) {
 		this.contents = contents;
-		this.updatedAt = LocalDateTime.now();
-
 	}
 }
