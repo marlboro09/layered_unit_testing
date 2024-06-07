@@ -3,7 +3,7 @@ package com.prac.music.domain.user.service;
 import com.prac.music.domain.user.dto.ProfileRequestDto;
 import com.prac.music.domain.user.dto.ProfileResponseDto;
 import com.prac.music.domain.user.entity.User;
-import com.prac.music.domain.user.repsitory.UserRepository;
+import com.prac.music.domain.user.repository.UserRepository;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ public class ProfileService {
     // 해당 유저 조희
     private User findUserById(String userId) {
         return userRepository.findByUserId(userId).orElseThrow(()->
-                new EntityNotFoundException("등록된 회원이 아닙니다.")
+            new EntityNotFoundException("등록된 회원이 아닙니다.")
         );
     }
 
