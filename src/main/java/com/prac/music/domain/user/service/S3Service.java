@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.prac.music.aop.MeasureExecutionTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,10 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     private final AmazonS3 s3;
-    private static final long MAX_IMAGE_SIZE = 10 * 1024 * 1024;
-    private static final long MAX_VIDEO_SIZE = 200 * 1024 * 1024;
+    private static final long MAX_IMAGE_SIZE = 10 * 1024 * 1024; //10mb
+    private static final long MAX_VIDEO_SIZE = 200 * 1024 * 1024; //200mb
 
+    @MeasureExecutionTime
     public String s3Upload(MultipartFile file) throws IOException {
         String fileName = file.getOriginalFilename();
         String ext = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase(); // 확장자를 소문자로 변환
@@ -75,5 +77,4 @@ public class S3Service {
                 throw new IllegalArgumentException("적절한 확장자가 아닙니다.");
         }
     }
-
 }

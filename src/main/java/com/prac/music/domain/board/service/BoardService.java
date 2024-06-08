@@ -56,6 +56,7 @@ public class BoardService {
 			for (MultipartFile file : files) {
 				String fileUrl = s3Service.s3Upload(file);
 
+
 				BoardFiles boardFile = BoardFiles.builder()
 						.file(fileUrl)
 						.board(board)
