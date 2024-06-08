@@ -1,10 +1,11 @@
 package com.prac.music.config;
 
 import com.prac.music.domain.user.repository.UserRepository;
+import com.prac.music.domain.user.security.UserDetailsServiceImpl;
 import com.prac.music.domain.user.service.JwtService;
 import com.prac.music.security.JwtAuthenticationFilter;
 import com.prac.music.security.JwtAuthorizationFilter;
-import com.prac.music.domain.user.security.UserDetailsServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,9 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-
-import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity

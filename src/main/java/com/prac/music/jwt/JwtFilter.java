@@ -1,7 +1,7 @@
 package com.prac.music.jwt;
 
 import com.prac.music.domain.user.service.JwtService;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
