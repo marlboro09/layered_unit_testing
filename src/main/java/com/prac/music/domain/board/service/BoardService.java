@@ -1,33 +1,30 @@
 package com.prac.music.domain.board.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.prac.music.domain.board.entity.BoardFiles;
-import com.prac.music.domain.board.repository.BoardFilesRepository;
-import com.prac.music.domain.user.service.S3Service;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.prac.music.domain.board.dto.BoardRequestDto;
 import com.prac.music.domain.board.dto.BoardResponseDto;
 import com.prac.music.domain.board.dto.UpdateRequestDto;
 import com.prac.music.domain.board.dto.UpdateResponseDto;
 import com.prac.music.domain.board.entity.Board;
+import com.prac.music.domain.board.entity.BoardFiles;
+import com.prac.music.domain.board.repository.BoardFilesRepository;
 import com.prac.music.domain.board.repository.BoardRepository;
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.repository.UserRepository;
+import com.prac.music.domain.user.service.S3Service;
 import com.prac.music.exception.BoardNotFoundException;
-import com.prac.music.exception.BoardRuntimeException;
 import com.prac.music.exception.UnauthorizedAccessException;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
