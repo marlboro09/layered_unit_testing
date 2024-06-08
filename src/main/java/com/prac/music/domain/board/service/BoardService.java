@@ -41,9 +41,6 @@ public class BoardService {
 
 	@Transactional
 	public BoardResponseDto createBoard(BoardRequestDto requestDto, User user,List<MultipartFile> files) throws IOException {
-		if(files.size() > 5) {
-			throw new IllegalArgumentException("파일은 5개까지 올릴 수 있습니다.");
-		}
 
 		User persistentUser = findUserById(user.getId());
 		Board board = Board.builder()
@@ -52,6 +49,11 @@ public class BoardService {
 			.user(persistentUser)
 			.build();
         boardRepository.save(board);
+
+		if(files.size() > 5) {
+			throw new IllegalArgumentException("파일은 5개까지 올릴 수 있습니다.");
+		}
+
 		if(files != null && !files.isEmpty()) {
 			List<BoardFiles> boardFiles = new ArrayList<>();
 			for (MultipartFile file : files) {
@@ -64,7 +66,6 @@ public class BoardService {
 
 				boardFiles.add(boardFile);
 			}
-
             boardFilesRepository.saveAll(boardFiles);
 		}
 		return new BoardResponseDto(board);
@@ -72,7 +73,7 @@ public class BoardService {
 	}
 
 	@Transactional
-	public UpdateResponseDto updateBoard(Long id, UpdateRequestDto requestDto, User user) {
+	public UpdateResponseDto updateBoard(Long id, UpdateRequestDto requestDto, User user,List<MultipartFile> files) throws IOException {
 		Board board = findBoardById(id);
 		User persistentUser = findUserById(user.getId());
 
