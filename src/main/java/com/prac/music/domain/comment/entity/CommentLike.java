@@ -7,7 +7,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "comment_heart")
+@Table(name = "comment_like")
 public class CommentLike extends Like {
     @ManyToOne
     @JoinColumn(name = "comment_id", nullable = false)
