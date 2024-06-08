@@ -78,6 +78,12 @@ public class BoardService {
 		return boards.map(BoardResponseDto::new);
 	}
 
+	@Transactional(readOnly = true)
+	public BoardResponseDto getBoardById(Long id) {
+		Board board = findBoardByIdWithComments(id);
+		return new BoardResponseDto(board);
+	}
+
 	private User findUserById(Long userId) {
 		return userRepository.findById(userId)
 			.orElseThrow(() -> new BoardNotFoundException("사용자 ID " + userId + "를 찾을 수 없습니다."));
@@ -85,6 +91,11 @@ public class BoardService {
 
 	private Board findBoardById(Long boardId) {
 		return boardRepository.findById(boardId)
+			.orElseThrow(() -> new BoardNotFoundException("게시물 ID " + boardId + "를 찾을 수 없습니다."));
+	}
+
+	private Board findBoardByIdWithComments(Long boardId) {
+		return boardRepository.findByIdWithComments(boardId)
 			.orElseThrow(() -> new BoardNotFoundException("게시물 ID " + boardId + "를 찾을 수 없습니다."));
 	}
 

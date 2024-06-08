@@ -60,6 +60,12 @@ public class BoardController {
 		return ResponseEntity.ok(responseDtos);
 	}
 
+	@GetMapping("/{id}")
+	public ResponseEntity<BoardResponseDto> getBoard(@PathVariable("id") Long id) {
+		BoardResponseDto responseDto = boardService.getBoardById(id);
+		return ResponseEntity.ok(responseDto);
+	}
+
 	@GetMapping("/paging")
 	public ResponseEntity<Page<BoardResponseDto>> paging(
 		@Parameter(hidden = true) @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {

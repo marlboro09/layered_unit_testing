@@ -33,19 +33,13 @@ public class SwaggerConfig implements WebMvcConfigurer {
 			.type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
 			.in(SecurityScheme.In.HEADER).name("Authorization");
 
-		// 리프레시 토큰 보안 스키마 설정
-		SecurityScheme refreshTokenScheme = new SecurityScheme()
-			.type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
-			.in(SecurityScheme.In.HEADER).name("Refresh-Token");
-
 		// 보안 요구 사항 설정
 		SecurityRequirement securityRequirement = new SecurityRequirement()
-			.addList("accessTokenAuth")
-			.addList("refreshTokenAuth");
+			.addList("accessTokenAuth");
+
 		return new OpenAPI()
 			.components(new Components()
-				.addSecuritySchemes("accessTokenAuth", accessTokenScheme)
-				.addSecuritySchemes("refreshTokenAuth", refreshTokenScheme))
+				.addSecuritySchemes("accessTokenAuth", accessTokenScheme))
 			.security(Arrays.asList(securityRequirement));
 	}
 
