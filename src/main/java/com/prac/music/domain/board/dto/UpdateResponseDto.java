@@ -1,11 +1,10 @@
 package com.prac.music.domain.board.dto;
 
-import java.time.LocalDateTime;
-
 import com.prac.music.domain.board.entity.Board;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor

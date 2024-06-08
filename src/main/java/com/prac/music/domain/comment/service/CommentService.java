@@ -1,8 +1,5 @@
 package com.prac.music.domain.comment.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.prac.music.domain.board.entity.Board;
 import com.prac.music.domain.board.repository.BoardRepository;
 import com.prac.music.domain.comment.dto.CommentRequestDto;
@@ -15,9 +12,10 @@ import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.repository.UserRepository;
 import com.prac.music.exception.CommentNotFoundException;
 import com.prac.music.exception.UnauthorizedAccessException;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

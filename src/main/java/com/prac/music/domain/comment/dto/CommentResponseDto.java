@@ -1,11 +1,10 @@
 package com.prac.music.domain.comment.dto;
 
-import java.time.LocalDateTime;
-
 import com.prac.music.domain.comment.entity.Comment;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
