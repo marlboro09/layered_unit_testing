@@ -2,11 +2,10 @@ package com.prac.music.domain.user.controller;
 
 import com.prac.music.domain.user.dto.ProfileRequestDto;
 import com.prac.music.domain.user.dto.ProfileResponseDto;
+import com.prac.music.domain.user.security.UserDetailsImpl;
 import com.prac.music.domain.user.service.ProfileService;
-import com.prac.music.domain.user.service.S3Service;
-import com.prac.music.security.UserDetailsImpl;
-import lombok.RequiredArgsConstructor;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

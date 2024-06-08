@@ -18,11 +18,15 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     private final AmazonS3 s3;
+    private static final long MAX_IMAGE_SIZE = 10 * 1024 * 1024;
+    private static final long MAX_VIDEO_SIZE = 200 * 1024 * 1024;
 
     public String s3Upload(MultipartFile file) throws IOException {
         String fileName = file.getOriginalFilename();
         String ext = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase(); // 확장자를 소문자로 변환
         String contentType = getContentType(ext);
+
+        validateFileSize(file.getSize(), ext);
 
         try {
             ObjectMetadata metadata = new ObjectMetadata();
@@ -36,6 +40,23 @@ public class S3Service {
         }
         return s3.getUrl(bucket, fileName).toString();
     }
+
+    private void validateFileSize(long size, String ext) {
+        if (isImageFile(ext) && size > MAX_IMAGE_SIZE) {
+            throw new IllegalArgumentException("이미지 파일 크기는 10MB를 초과할 수 없습니다.");
+        } else if (isVideoFile(ext) && size > MAX_VIDEO_SIZE) {
+            throw new IllegalArgumentException("비디오 파일 크기는 200MB를 초과할 수 없습니다.");
+        }
+    }
+
+    private boolean isImageFile(String ext) {
+        return ext.equals("jpeg") || ext.equals("jpg") || ext.equals("png");
+    }
+
+    private boolean isVideoFile(String ext) {
+        return ext.equals("mp4") || ext.equals("avi") || ext.equals("mov");
+    }
+
     private String getContentType(String ext) {
         switch (ext) {
             case "jpeg":
@@ -47,7 +68,7 @@ public class S3Service {
             case "mp4":
                 return "video/mp4";
             case "avi":
-                return "video/x-msvideo";
+                return "video/x-avi";
             case "mov":
                 return "video/quicktime";
             default:
