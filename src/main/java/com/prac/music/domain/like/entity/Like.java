@@ -14,7 +14,7 @@ public abstract class Like extends BaseTimeEntity {
     // 유저의 ID
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    protected User user;
 
     // 게시글 또는 댓글의 ID
     public abstract Long getContentId();
@@ -22,6 +22,6 @@ public abstract class Like extends BaseTimeEntity {
     // 게시글 또는 댓글의 유형
     @Enumerated(EnumType.STRING)
     @Column(name = "content_type", nullable = false)
-    private ContentType contentType;
+    protected ContentType contentType;
 
 }
