@@ -5,8 +5,8 @@ import com.prac.music.domain.user.dto.ProfileRequestDto;
 import com.prac.music.domain.user.dto.ProfileResponseDto;
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.repository.UserRepository;
+import com.prac.music.exception.UserNotFoundException;
 import io.micrometer.common.util.StringUtils;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -58,7 +58,7 @@ public class ProfileService {
     // 해당 유저 조희
     public User findUserById(String userId) {
         return userRepository.findByUserId(userId).orElseThrow(()->
-            new EntityNotFoundException("등록된 회원이 아닙니다.")
+            new UserNotFoundException("등록된 회원이 아닙니다.")
         );
     }
 
