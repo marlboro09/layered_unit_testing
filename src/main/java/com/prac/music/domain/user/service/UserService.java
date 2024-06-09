@@ -1,5 +1,6 @@
 package com.prac.music.domain.user.service;
 
+import com.prac.music.common.service.S3Service;
 import com.prac.music.domain.user.dto.LoginRequestDto;
 import com.prac.music.domain.user.dto.LoginResponseDto;
 import com.prac.music.domain.user.dto.SignoutRequestDto;

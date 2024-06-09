@@ -1,5 +1,6 @@
 package com.prac.music.domain.user.service;
 
+import com.prac.music.common.service.S3Service;
 import com.prac.music.domain.user.dto.ProfileRequestDto;
 import com.prac.music.domain.user.dto.ProfileResponseDto;
 import com.prac.music.domain.user.entity.User;

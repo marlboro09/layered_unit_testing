@@ -10,7 +10,7 @@ import com.prac.music.domain.board.repository.BoardFilesRepository;
 import com.prac.music.domain.board.repository.BoardRepository;
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.repository.UserRepository;
-import com.prac.music.domain.user.service.S3Service;
+import com.prac.music.common.service.S3Service;
 import com.prac.music.exception.BoardNotFoundException;
 import com.prac.music.exception.UnauthorizedAccessException;
 import lombok.RequiredArgsConstructor;
