@@ -8,6 +8,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+	@ExceptionHandler(UserNotFoundException.class)
+	public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException e) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("유저를 찾을 수 없습니다: " + e.getMessage());
+	}
+
 	@ExceptionHandler(BoardNotFoundException.class)
 	public ResponseEntity<String> handleBoardNotFoundException(BoardNotFoundException e) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("게시물을 찾을 수 없습니다: " + e.getMessage());

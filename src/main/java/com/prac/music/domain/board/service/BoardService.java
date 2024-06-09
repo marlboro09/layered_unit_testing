@@ -110,7 +110,7 @@ public class BoardService {
 			.orElseThrow(() -> new BoardNotFoundException("사용자 ID " + userId + "를 찾을 수 없습니다."));
 	}
 
-	private Board findBoardById(Long boardId) {
+	public Board findBoardById(Long boardId) {
 		return boardRepository.findById(boardId)
 			.orElseThrow(() -> new BoardNotFoundException("게시물 ID " + boardId + "를 찾을 수 없습니다."));
 	}
