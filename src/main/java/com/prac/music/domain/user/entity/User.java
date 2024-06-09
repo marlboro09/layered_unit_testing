@@ -56,7 +56,7 @@ public class User extends BaseTimeEntity {
         this.password = requestDto.getPassword();
         this.intro = requestDto.getIntro();
         this.profileImage = profileImage;
-        this.userStatusEnum = UserStatusEnum.NORMAL;
+        this.userStatusEnum = UserStatusEnum.TEMPORARY;
     }
 
     public void update(ProfileRequestDto requestDto,String profileImage) {
@@ -78,7 +78,11 @@ public class User extends BaseTimeEntity {
         this.refreshToken = refreshToken;
     }
 
-    public void updateStatus(){
+    public void updateStatusVeryfied() {
+        this.userStatusEnum = UserStatusEnum.NORMAL;
+    }
+
+    public void updateStatusSignout(){
         this.userStatusEnum = UserStatusEnum.SECESSION;
     }
 
