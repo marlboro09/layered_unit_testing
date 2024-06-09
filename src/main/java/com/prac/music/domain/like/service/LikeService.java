@@ -7,10 +7,12 @@ import com.prac.music.domain.board.service.BoardService;
 import com.prac.music.domain.comment.entity.Comment;
 import com.prac.music.domain.comment.entity.CommentLike;
 import com.prac.music.domain.comment.repository.CommentRepository;
+import com.prac.music.domain.comment.service.CommentService;
 import com.prac.music.domain.like.repository.BoardLikeRepository;
 import com.prac.music.domain.like.repository.CommentLikeRepository;
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.service.ProfileService;
+import com.prac.music.exception.CommentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +25,8 @@ public class LikeService {
 
     private final BoardLikeRepository boardLikeRepository;
     private final CommentLikeRepository commentLikeRepository;
-    private final CommentRepository commentRepository;
     private final BoardService boardService;
+    private final CommentService commentService;
     private final ProfileService profileService;
 
     @Transactional
@@ -53,9 +55,7 @@ public class LikeService {
     public int commentLike(Long boardId, Long commentId, User user) {
         boardService.findBoardById(boardId);
         User getUser = profileService.findUserById(user.getUserId());
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() ->
-                new IllegalArgumentException("해당 댓글은 존재하지 않는다")
-        );
+        Comment comment = commentService.findCommentById(commentId);
         if (comment.getUser().getId().equals(getUser.getId())) {
             throw new IllegalArgumentException("자신이 작성한 댓글에는 좋아요를 남길 수 없습니다.");
         }
