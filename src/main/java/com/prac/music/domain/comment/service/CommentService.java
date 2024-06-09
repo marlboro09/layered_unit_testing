@@ -63,7 +63,7 @@ public class CommentService {
 		commentRepository.delete(comment);
 	}
 
-	private Comment findCommentById(Long commentId) {
+	public Comment findCommentById(Long commentId) {
 		return commentRepository.findById(commentId)
 			.orElseThrow(() -> new CommentNotFoundException("찾으시는 댓글이 없습니다."));
 	}
