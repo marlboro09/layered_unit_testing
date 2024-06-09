@@ -55,7 +55,7 @@ public class ProfileService {
 
 
     // 해당 유저 조희
-    private User findUserById(String userId) {
+    public User findUserById(String userId) {
         return userRepository.findByUserId(userId).orElseThrow(()->
             new EntityNotFoundException("등록된 회원이 아닙니다.")
         );

@@ -1,26 +1,30 @@
 package com.prac.music.domain.board.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.prac.music.domain.board.dto.BoardRequestDto;
 import com.prac.music.domain.board.dto.BoardResponseDto;
 import com.prac.music.domain.board.dto.UpdateRequestDto;
 import com.prac.music.domain.board.dto.UpdateResponseDto;
 import com.prac.music.domain.board.entity.Board;
+import com.prac.music.domain.board.entity.BoardFiles;
+import com.prac.music.domain.board.repository.BoardFilesRepository;
 import com.prac.music.domain.board.repository.BoardRepository;
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.repository.UserRepository;
+import com.prac.music.domain.user.service.S3Service;
 import com.prac.music.exception.BoardNotFoundException;
 import com.prac.music.exception.UnauthorizedAccessException;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,22 +33,45 @@ public class BoardService {
 
 	private final BoardRepository boardRepository;
 	private final UserRepository userRepository;
+	private final BoardFilesRepository boardFilesRepository;
+	private final S3Service s3Service;
 
 	@Transactional
-	public BoardResponseDto createBoard(BoardRequestDto requestDto, User user) {
+	public BoardResponseDto createBoard(BoardRequestDto requestDto, User user,List<MultipartFile> files) throws IOException {
+
 		User persistentUser = findUserById(user.getId());
 		Board board = Board.builder()
 			.title(requestDto.getTitle())
 			.contents(requestDto.getContents())
 			.user(persistentUser)
 			.build();
+        boardRepository.save(board);
 
-		Board savedBoard = boardRepository.save(board);
-		return new BoardResponseDto(savedBoard);
+		if(files.size() > 5) {
+			throw new IllegalArgumentException("파일은 5개까지 올릴 수 있습니다.");
+		}
+
+		if(files != null && !files.isEmpty()) {
+			List<BoardFiles> boardFiles = new ArrayList<>();
+			for (MultipartFile file : files) {
+				String fileUrl = s3Service.s3Upload(file);
+
+
+				BoardFiles boardFile = BoardFiles.builder()
+						.file(fileUrl)
+						.board(board)
+						.build();
+
+				boardFiles.add(boardFile);
+			}
+            boardFilesRepository.saveAll(boardFiles);
+		}
+		return new BoardResponseDto(board);
+
 	}
 
 	@Transactional
-	public UpdateResponseDto updateBoard(Long id, UpdateRequestDto requestDto, User user) {
+	public UpdateResponseDto updateBoard(Long id, UpdateRequestDto requestDto, User user,List<MultipartFile> files) throws IOException {
 		Board board = findBoardById(id);
 		User persistentUser = findUserById(user.getId());
 

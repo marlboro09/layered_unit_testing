@@ -1,6 +1,5 @@
 package com.prac.music.domain.user.dto;
 
-import com.prac.music.domain.user.entity.User;
 import lombok.Getter;
 
 @Getter
