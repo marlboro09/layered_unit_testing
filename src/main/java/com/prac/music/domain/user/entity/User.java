@@ -44,37 +44,26 @@ public class User extends BaseTimeEntity {
     @Column(name = "profile_Image")
     private String profileImage;
 
-
     public boolean isExist() {
         return this.userStatusEnum == UserStatusEnum.NORMAL;
     }
 
-    public User(SignupRequestDto requestDto,String profileImage) {
-        this.userId = requestDto.getUserId();
+    public void nonPasswordProfileUpdate(ProfileRequestDto requestDto, String profileImage) {
         this.name = requestDto.getName();
         this.email = requestDto.getEmail();
-        this.password = requestDto.getPassword();
         this.intro = requestDto.getIntro();
         this.profileImage = profileImage;
-        this.userStatusEnum = UserStatusEnum.TEMPORARY;
     }
 
-    public void update(ProfileRequestDto requestDto,String profileImage) {
-      this.name = requestDto.getName();
-      this.email = requestDto.getEmail();
-      this.intro = requestDto.getIntro();
-      this.profileImage = profileImage;
+    public void inPasswordProfileUpdate(ProfileRequestDto requestDto, String encodedPasswdDto, String profileImage) {
+        this.name = requestDto.getName();
+        this.email = requestDto.getEmail();
+        this.intro = requestDto.getIntro();
+        this.password = encodedPasswdDto;
+        this.profileImage = profileImage;
     }
 
-    public void update(ProfileRequestDto requestDto, String encodedPasswdDto,String profileImage) {
-      this.name = requestDto.getName();
-      this.email = requestDto.getEmail();
-      this.intro = requestDto.getIntro();
-      this.password = encodedPasswdDto;
-      this.profileImage = profileImage;
-    }
-
-    public void updateRefresh(String refreshToken){
+    public void updateRefresh(String refreshToken) {
         this.refreshToken = refreshToken;
     }
 
@@ -82,7 +71,7 @@ public class User extends BaseTimeEntity {
         this.userStatusEnum = UserStatusEnum.NORMAL;
     }
 
-    public void updateStatusSignout(){
+    public void updateStatusSignout() {
         this.userStatusEnum = UserStatusEnum.SECESSION;
     }
 

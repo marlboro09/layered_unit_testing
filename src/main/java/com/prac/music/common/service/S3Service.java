@@ -24,23 +24,25 @@ public class S3Service {
 
     @MeasureExecutionTime
     public String s3Upload(MultipartFile file) throws IOException {
-        String fileName = file.getOriginalFilename();
-        String ext = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase(); // 확장자를 소문자로 변환
-        String contentType = s3Util.getContentType(ext);
+        if (file != null) {
+            try {
+                String fileName = file.getOriginalFilename();
+                String ext = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase(); // 확장자를 소문자로 변환
+                String contentType = s3Util.getContentType(ext);
 
-        s3Util.validateFileSize(file.getSize(), ext);
-
-        try {
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentType(contentType);
-            s3.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), metadata));
-        } catch (AmazonS3Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("S3 업로드 중 오류가 발생했습니다.");
-        } catch (SdkClientException e) {
-            e.printStackTrace();
+                s3Util.validateFileSize(file.getSize(), ext);
+                ObjectMetadata metadata = new ObjectMetadata();
+                metadata.setContentType(contentType);
+                s3.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), metadata));
+                return s3.getUrl(bucket, fileName).toString();
+            } catch (AmazonS3Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("S3 업로드 중 오류가 발생했습니다.");
+            } catch (SdkClientException e) {
+                e.printStackTrace();
+            }
         }
-        return s3.getUrl(bucket, fileName).toString();
+        return "null";
     }
 }
 

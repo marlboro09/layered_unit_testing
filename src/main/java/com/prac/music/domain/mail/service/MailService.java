@@ -1,12 +1,12 @@
 package com.prac.music.domain.mail.service;
 
+import com.prac.music.common.exception.UserNotFoundException;
 import com.prac.music.domain.mail.dto.MailRequestDto;
 import com.prac.music.domain.mail.dto.VerifyRequestDto;
 import com.prac.music.domain.mail.entity.Mail;
 import com.prac.music.domain.mail.repository.MailRepository;
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.repository.UserRepository;
-import com.prac.music.common.exception.UserNotFoundException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -50,11 +50,11 @@ public class MailService {
         String targetCode = mail.getCode();
         String code = requestDto.getCode();
 
-        if(now.isAfter(timeLimit)) {
+        if (now.isAfter(timeLimit)) {
             throw new IllegalArgumentException("만료된 인증코드입니다.");
         }
 
-        if(targetCode.equals(code)) {
+        if (targetCode.equals(code)) {
             user.updateStatusVeryfied();
         }
     }
@@ -74,7 +74,7 @@ public class MailService {
     }
 
     // 이메일 폼 : 내용, 보낸이, 받을이, 제목
-    private MimeMessage createMailForm(Mail mail){
+    private MimeMessage createMailForm(Mail mail) {
         String code = createCode();
         mail.mailAddCode(code);
 
@@ -106,7 +106,7 @@ public class MailService {
         );
     }
 
-    private Mail checkAndSaveMail (String email) {
+    private Mail checkAndSaveMail(String email) {
         User user = getUserByEmail(email);
         Optional<Mail> checkMail = mailRepository.findByEmail(user.getEmail());
         checkMail.ifPresent(mailRepository::delete);

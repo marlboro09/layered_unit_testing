@@ -1,5 +1,7 @@
 package com.prac.music.domain.comment.service;
 
+import com.prac.music.common.exception.CommentNotFoundException;
+import com.prac.music.common.exception.UnauthorizedAccessException;
 import com.prac.music.domain.board.entity.Board;
 import com.prac.music.domain.board.repository.BoardRepository;
 import com.prac.music.domain.comment.dto.CommentRequestDto;
@@ -9,8 +11,6 @@ import com.prac.music.domain.comment.entity.Comment;
 import com.prac.music.domain.comment.repository.CommentRepository;
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.repository.UserRepository;
-import com.prac.music.common.exception.CommentNotFoundException;
-import com.prac.music.common.exception.UnauthorizedAccessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,9 @@ public class CommentService {
 	private final BoardRepository boardRepository;
 
 	@Transactional
-	public CommentResponseDto createComment(CommentRequestDto requestDto, Long boardId, User user) {
+	public CommentResponseDto createComment(CommentRequestDto requestDto,
+											Long boardId,
+											User user) {
 		Board findBoard = findBoardById(boardId);
 		User persistentUser = findUserById(user.getId());
 
@@ -41,7 +43,9 @@ public class CommentService {
 	}
 
 	@Transactional
-	public CommentResponseDto updateComment(Long commentId, User user, CommentUpdateRequestDto requestDto) {
+	public CommentResponseDto updateComment(Long commentId,
+											User user,
+											CommentUpdateRequestDto requestDto) {
 		Comment comment = findCommentById(commentId);
 		User persistentUser = findUserById(user.getId());
 
@@ -53,7 +57,8 @@ public class CommentService {
 	}
 
 	@Transactional
-	public void deleteComment(Long commentId, User user) {
+	public void deleteComment(Long commentId,
+							  User user) {
 		Comment comment = findCommentById(commentId);
 		User persistentUser = findUserById(user.getId());
 
@@ -77,7 +82,8 @@ public class CommentService {
 			.orElseThrow(() -> new CommentNotFoundException("게시글을 찾을 수 없습니다."));
 	}
 
-	private void validateUserAuthorization(Comment comment, User user) {
+	private void validateUserAuthorization(Comment comment,
+										   User user) {
 		if (!comment.getUser().equals(user)) {
 			throw new UnauthorizedAccessException("권한이 없습니다.");
 		}

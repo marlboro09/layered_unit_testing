@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public class LoginResponseDto {
     private String token;
+
     private String refreshToken;
 
     private String message;
