@@ -1,6 +1,7 @@
 package com.prac.music.domain.user.entity;
 
 public enum UserStatusEnum {
+    TEMPORARY(Authority.TEMPORARY),
     NORMAL(Authority.NORMAL),
     SECESSION(Authority.SECESSION);
 
@@ -15,6 +16,7 @@ public enum UserStatusEnum {
     }
 
     public static class Authority{
+        public static final String TEMPORARY = "TEMPORARY";
         public static final String NORMAL = "NORMAL";
         public static final String SECESSION = "SECESSION";
     }

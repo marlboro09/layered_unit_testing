@@ -1,10 +1,13 @@
 package com.prac.music.domain.user.service;
 
+import com.prac.music.common.service.S3Service;
+import com.prac.music.domain.mail.service.MailService;
 import com.prac.music.domain.user.dto.LoginRequestDto;
 import com.prac.music.domain.user.dto.LoginResponseDto;
 import com.prac.music.domain.user.dto.SignoutRequestDto;
 import com.prac.music.domain.user.dto.SignupRequestDto;
 import com.prac.music.domain.user.entity.User;
+import com.prac.music.domain.user.entity.UserStatusEnum;
 import com.prac.music.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,6 +30,7 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
     private final JwtService jwtService;
     private final S3Service s3Service;
 
@@ -47,6 +51,7 @@ public class UserService {
         }
 
         User user = new User(requestDto, imageUrl);
+
         return userRepository.save(user);
     }
 
@@ -89,7 +94,11 @@ public class UserService {
             throw new IllegalArgumentException("잘못된 비밀번호입니다.");
         }
 
-        user.updateStatus();
+        user.updateStatusSignout();
         userRepository.save(user);
+    }
+
+    private boolean checkUserStatus (User user) {
+        return user.getUserStatusEnum().equals(UserStatusEnum.NORMAL);
     }
 }
