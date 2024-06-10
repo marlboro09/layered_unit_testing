@@ -1,7 +1,6 @@
 package com.prac.music.domain.user.service;
 
 import com.prac.music.common.exception.PasswordRuntimeException;
-import com.prac.music.common.exception.JwtServiceException;
 import com.prac.music.common.exception.UserServiceException;
 import com.prac.music.common.service.S3Service;
 import com.prac.music.domain.user.dto.ProfileRequestDto;

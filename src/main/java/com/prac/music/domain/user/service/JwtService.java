@@ -1,5 +1,6 @@
 package com.prac.music.domain.user.service;
 
+import com.prac.music.common.exception.JwtServiceException;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +12,6 @@ import org.springframework.util.StringUtils;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
-
-import com.prac.music.common.exception.JwtServiceException;
 
 @Slf4j
 @Service
