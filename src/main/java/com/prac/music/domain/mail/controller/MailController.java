@@ -21,14 +21,12 @@ public class MailController {
 
     @PostMapping("/send")
     public ResponseEntity<String> sendMail (@RequestBody MailRequestDto requestDto) throws MessagingException {
-        log.info("MailController.sendMail()");
         mailService.sendMail(requestDto);
         return ResponseEntity.ok(requestDto.getEmail() +"로 인증코드가 발송되었습니다.");
     }
 
     @PostMapping("/verify")
     public ResponseEntity<String> verifyMail (@RequestBody VerifyRequestDto requestDto) {
-        log.info("MailController.verifyMail()");
         mailService.verifyMail(requestDto);
         return ResponseEntity.ok("입력하신 메일 "+ requestDto.getEmail() + "이 정상적으로 인증되었습니다.");
     }

@@ -17,13 +17,13 @@ public class BoardResponseDto {
 
 	private String contents;
 
-	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
 
 	public BoardResponseDto(Board board) {
 		this.boardId = board.getId();
 		this.userId = board.getUser().getId();
 		this.title = board.getTitle();
 		this.contents = board.getContents();
-		this.createdAt = board.getCreatedAt();
+		this.updatedAt = board.getCreatedAt();
 	}
 }
