@@ -1,4 +1,4 @@
-package com.prac.music.exception;
+package com.prac.music.common.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

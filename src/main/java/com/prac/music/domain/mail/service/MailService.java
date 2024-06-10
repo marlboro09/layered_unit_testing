@@ -1,13 +1,12 @@
 package com.prac.music.domain.mail.service;
 
-import com.amazonaws.services.kms.model.VerifyRequest;
 import com.prac.music.domain.mail.dto.MailRequestDto;
 import com.prac.music.domain.mail.dto.VerifyRequestDto;
 import com.prac.music.domain.mail.entity.Mail;
 import com.prac.music.domain.mail.repository.MailRepository;
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.repository.UserRepository;
-import com.prac.music.exception.UserNotFoundException;
+import com.prac.music.common.exception.UserNotFoundException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Optional;
 import java.util.Random;
 

@@ -3,7 +3,6 @@ package com.prac.music.domain.comment.controller;
 import com.prac.music.domain.comment.dto.CommentRequestDto;
 import com.prac.music.domain.comment.dto.CommentResponseDto;
 import com.prac.music.domain.comment.dto.CommentUpdateRequestDto;
-import com.prac.music.domain.comment.dto.CommentUpdateResponseDto;
 import com.prac.music.domain.comment.service.CommentService;
 import com.prac.music.domain.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +26,11 @@ public class CommentController {
 	}
 
 	@PutMapping("/{commentId}")
-	public ResponseEntity<CommentUpdateResponseDto> updateComment(@PathVariable("boardId") Long boardId,
+	public ResponseEntity<CommentResponseDto> updateComment(@PathVariable("boardId") Long boardId,
 		@PathVariable("commentId") Long commentId,
 		@RequestBody CommentUpdateRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		CommentUpdateResponseDto responseDto = commentService.updateComment(commentId, userDetails.getUser(), requestDto);
+		CommentResponseDto responseDto = commentService.updateComment(commentId, userDetails.getUser(), requestDto);
 		return ResponseEntity.ok(responseDto);
 	}
 

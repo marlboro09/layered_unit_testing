@@ -3,7 +3,6 @@ package com.prac.music.domain.board.service;
 import com.prac.music.domain.board.dto.BoardRequestDto;
 import com.prac.music.domain.board.dto.BoardResponseDto;
 import com.prac.music.domain.board.dto.UpdateRequestDto;
-import com.prac.music.domain.board.dto.UpdateResponseDto;
 import com.prac.music.domain.board.entity.Board;
 import com.prac.music.domain.board.entity.BoardFiles;
 import com.prac.music.domain.board.repository.BoardFilesRepository;
@@ -11,8 +10,8 @@ import com.prac.music.domain.board.repository.BoardRepository;
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.repository.UserRepository;
 import com.prac.music.common.service.S3Service;
-import com.prac.music.exception.BoardNotFoundException;
-import com.prac.music.exception.UnauthorizedAccessException;
+import com.prac.music.common.exception.BoardNotFoundException;
+import com.prac.music.common.exception.UnauthorizedAccessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -71,7 +70,7 @@ public class BoardService {
 	}
 
 	@Transactional
-	public UpdateResponseDto updateBoard(Long id, UpdateRequestDto requestDto, User user,List<MultipartFile> files) throws IOException {
+	public BoardResponseDto updateBoard(Long id, UpdateRequestDto requestDto, User user,List<MultipartFile> files) throws IOException {
 		Board board = findBoardById(id);
 		User persistentUser = findUserById(user.getId());
 
@@ -79,7 +78,7 @@ public class BoardService {
 
 		board.update(requestDto.getTitle(), requestDto.getContents());
 		Board updatedBoard = boardRepository.save(board);
-		return new UpdateResponseDto(updatedBoard);
+		return new BoardResponseDto(updatedBoard);
 	}
 
 	@Transactional
