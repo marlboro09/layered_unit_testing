@@ -1,7 +1,8 @@
 package com.prac.music.domain.user.service;
 
 import com.prac.music.common.exception.PasswordRuntimeException;
-import com.prac.music.common.exception.UserNotFoundException;
+import com.prac.music.common.exception.JwtServiceException;
+import com.prac.music.common.exception.UserServiceException;
 import com.prac.music.common.service.S3Service;
 import com.prac.music.domain.user.dto.ProfileRequestDto;
 import com.prac.music.domain.user.dto.ProfileResponseDto;
@@ -63,7 +64,7 @@ public class ProfileService {
     // 해당 유저 조희
     public User findUserById(String userId) {
         return userRepository.findByUserId(userId).orElseThrow(() ->
-                new UserNotFoundException("등록된 회원이 아닙니다.")
+                new UserServiceException("등록된 회원이 아닙니다.")
         );
     }
 

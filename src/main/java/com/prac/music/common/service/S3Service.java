@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.prac.music.aop.MeasureExecutionTime;
+import com.prac.music.common.exception.S3ServiceException;
 import com.prac.music.common.util.S3Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,7 +38,7 @@ public class S3Service {
                 return s3.getUrl(bucket, fileName).toString();
             } catch (AmazonS3Exception e) {
                 e.printStackTrace();
-                throw new RuntimeException("S3 업로드 중 오류가 발생했습니다.");
+                throw new S3ServiceException("S3 업로드 중 오류가 발생했습니다.");
             } catch (SdkClientException e) {
                 e.printStackTrace();
             }

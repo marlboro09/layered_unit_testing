@@ -1,6 +1,6 @@
 package com.prac.music.domain.comment.service;
 
-import com.prac.music.common.exception.CommentNotFoundException;
+import com.prac.music.common.exception.CommentServiceException;
 import com.prac.music.common.exception.UnauthorizedAccessException;
 import com.prac.music.domain.board.entity.Board;
 import com.prac.music.domain.board.repository.BoardRepository;
@@ -69,23 +69,23 @@ public class CommentService {
 
 	public Comment findCommentById(Long commentId) {
 		return commentRepository.findById(commentId)
-			.orElseThrow(() -> new CommentNotFoundException("찾으시는 댓글이 없습니다."));
+			.orElseThrow(() -> new CommentServiceException("찾으시는 댓글이 없습니다."));
 	}
 
 	private User findUserById(Long userId) {
 		return userRepository.findById(userId)
-			.orElseThrow(() -> new CommentNotFoundException("사용자를 찾을 수 없습니다."));
+			.orElseThrow(() -> new CommentServiceException("사용자를 찾을 수 없습니다."));
 	}
 
 	private Board findBoardById(Long boardId) {
 		return boardRepository.findById(boardId)
-			.orElseThrow(() -> new CommentNotFoundException("게시글을 찾을 수 없습니다."));
+			.orElseThrow(() -> new CommentServiceException("게시글을 찾을 수 없습니다."));
 	}
 
 	private void validateUserAuthorization(Comment comment,
 										   User user) {
 		if (!comment.getUser().equals(user)) {
-			throw new UnauthorizedAccessException("");
+			throw new UnauthorizedAccessException("권한이 없습니다.");
 		}
 	}
 }

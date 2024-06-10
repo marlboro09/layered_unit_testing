@@ -12,6 +12,8 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
 
+import com.prac.music.common.exception.JwtServiceException;
+
 @Slf4j
 @Service
 public class JwtService {
@@ -61,15 +63,14 @@ public class JwtService {
             Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
-            log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
+            throw new JwtServiceException("유효하지 않은 JWT 서명입니다.");
         } catch (UnsupportedJwtException e) {
-            log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+            throw new JwtServiceException("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
-            log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
+            throw new JwtServiceException("잘못된 JWT 토큰입니다.");
         } catch (ExpiredJwtException e) {
             throw new AccessDeniedException("재로그인 해주세요");
         }
-        return false;
     }
 
     public Claims getUserInfoFromToken(String token) {

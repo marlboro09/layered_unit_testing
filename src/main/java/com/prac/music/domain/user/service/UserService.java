@@ -1,5 +1,7 @@
 package com.prac.music.domain.user.service;
 
+import com.prac.music.common.exception.PasswordRuntimeException;
+import com.prac.music.common.exception.UserServiceException;
 import com.prac.music.common.service.S3Service;
 import com.prac.music.domain.mail.service.MailService;
 import com.prac.music.domain.user.dto.LoginRequestDto;
@@ -48,7 +50,7 @@ public class UserService {
         Optional<User> checkUser = userRepository.findByUserId(userId);
 
         if (checkUser.isPresent()) {
-            throw new IllegalArgumentException("이미 중복된 사용자가 존재합니다.");
+            throw new UserServiceException("이미 중복된 사용자가 존재합니다.");
         }
 
         User user = User.builder()
@@ -66,7 +68,7 @@ public class UserService {
 
     public LoginResponseDto loginUser(@RequestBody LoginRequestDto requestDto) {
         User user = this.userRepository.findByUserId(requestDto.getUserId()).orElseThrow(
-                () -> new UsernameNotFoundException("아이디를 다시 확인해주세요")
+                () -> new UserServiceException("아이디를 다시 확인해주세요")
         );
 
         Authentication authentication = authenticationManager.authenticate(
@@ -92,7 +94,7 @@ public class UserService {
     public void signoutUser(SignoutRequestDto requestDto,
                             User user) {
         if (!user.isExist()) {
-            throw new IllegalArgumentException("이미 탈퇴된 사용자입니다.");
+            throw new UserServiceException("이미 탈퇴된 사용자입니다.");
         }
 
         String password = requestDto.getPassword();
@@ -101,7 +103,7 @@ public class UserService {
         System.out.println("입력된 비밀번호 : " + password);
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
+            throw new PasswordRuntimeException("잘못된 비밀번호입니다.");
         }
 
         user.updateStatusSignout();
