@@ -1,5 +1,6 @@
 package com.prac.music.domain.user.service;
 
+import com.prac.music.common.exception.PasswordRuntimeException;
 import com.prac.music.common.exception.UserNotFoundException;
 import com.prac.music.common.service.S3Service;
 import com.prac.music.domain.user.dto.ProfileRequestDto;
@@ -50,9 +51,9 @@ public class ProfileService {
         // 비밀번호 인코딩 후 업데이트
         if (ckePassword) {
             String encodedPassword = passwordEncoder.encode(requestDto.getNewPassword());
-            getUser.update(requestDto, encodedPassword, imageUrl);
+            getUser.profileUpdate(requestDto, encodedPassword, imageUrl);
         } else {
-            getUser.update(requestDto, imageUrl);
+            getUser.profileUpdate(requestDto, imageUrl);
         }
 
         return "프로필이 수정되었습니다.";
@@ -74,16 +75,16 @@ public class ProfileService {
             return false; // 둘 다 비어있으면 검사하지 않음
         }
         if (StringUtils.isBlank(password)) {
-            throw new NullPointerException("현재 비밀번호를 입력해주세요");
+            throw new PasswordRuntimeException("현재 비밀번호를 입력해주세요");
         }
         if (StringUtils.isBlank(newPassword)) {
-            throw new NullPointerException("새 비밀번호를 입력해주세요");
+            throw new PasswordRuntimeException("새 비밀번호를 입력해주세요");
         }
         if (!passwordEncoder.matches(password, userPassword)) {
-            throw new IllegalArgumentException("현재 비밀번호와 일치하지 않습니다.");
+            throw new PasswordRuntimeException("현재 비밀번호와 일치하지 않습니다.");
         }
         if (passwordEncoder.matches(newPassword, userPassword)) {
-            throw new IllegalArgumentException("현재 비밀번호와 동일한 비밀번호로는 변경할 수 없습니다.");
+            throw new PasswordRuntimeException("현재 비밀번호와 동일한 비밀번호로는 변경할 수 없습니다.");
         }
         return true;
     }

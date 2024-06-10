@@ -37,4 +37,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleCommentRuntimeException(CommentRuntimeException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 처리 중 오류가 발생했습니다: " + e.getMessage());
     }
+
+    @ExceptionHandler(PasswordRuntimeException.class)
+    public ResponseEntity<String> handlePasswordRuntimeException(PasswordRuntimeException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("비밀번호 오류: " + e.getMessage());
+    }
 }
