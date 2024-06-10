@@ -79,7 +79,7 @@ public class CommentService {
 
 	private void validateUserAuthorization(Comment comment, User user) {
 		if (!comment.getUser().equals(user)) {
-			throw new UnauthorizedAccessException("");
+			throw new UnauthorizedAccessException("권한이 없습니다.");
 		}
 	}
 }

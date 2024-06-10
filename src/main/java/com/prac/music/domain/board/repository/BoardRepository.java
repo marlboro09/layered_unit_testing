@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
-	Page<Board> findAllByOrderByCreatedAtDesc(Pageable pageable);
+	Page<Board> findAllByOrderByUpdatedAtDesc(Pageable pageable);
 
 	@Query("SELECT b FROM Board b LEFT JOIN FETCH b.comments WHERE b.id = :boardId")
 	Optional<Board> findByIdWithComments(@Param("boardId") Long boardId);

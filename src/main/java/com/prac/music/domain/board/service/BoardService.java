@@ -100,7 +100,7 @@ public class BoardService {
 
 	@Transactional(readOnly = true)
 	public Page<BoardResponseDto> paging(Pageable pageable) {
-		Page<Board> boards = boardRepository.findAllByOrderByCreatedAtDesc(pageable);
+		Page<Board> boards = boardRepository.findAllByOrderByUpdatedAtDesc(pageable);
 		return boards.map(BoardResponseDto::new);
 	}
 

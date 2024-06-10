@@ -25,8 +25,6 @@ import com.prac.music.domain.board.dto.UpdateRequestDto;
 import com.prac.music.domain.board.service.BoardService;
 import com.prac.music.domain.user.security.UserDetailsImpl;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,14 +44,14 @@ public class BoardController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable("id") Long id, @RequestPart(value = "files") List<MultipartFile> files, @RequestPart(value = "board") UpdateRequestDto requestDto,
+	public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable Long id, @RequestPart(value = "files") List<MultipartFile> files, @RequestPart(value = "board") UpdateRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 		BoardResponseDto responseDto = boardService.updateBoard(id, requestDto, userDetails.getUser(), files);
 		return ResponseEntity.ok(responseDto);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteBoard(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+	public ResponseEntity<Void> deleteBoard(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 		boardService.deleteBoard(id, userDetails.getUser());
 		return ResponseEntity.noContent().build();
 	}
@@ -65,15 +63,13 @@ public class BoardController {
 	}
 
 	@GetMapping("/{id}")
-	@Operation
-	public ResponseEntity<BoardResponseDto> getBoard(@PathVariable("id") Long id) {
+	public ResponseEntity<BoardResponseDto> getBoard(@PathVariable Long id) {
 		BoardResponseDto responseDto = boardService.getBoardById(id);
 		return ResponseEntity.ok(responseDto);
 	}
 
 	@GetMapping("/paging")
-	public ResponseEntity<Page<BoardResponseDto>> paging(
-		@Parameter(hidden = true) @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+	public ResponseEntity<Page<BoardResponseDto>> paging(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
 		Page<BoardResponseDto> postsPages = boardService.paging(pageable);
 		return ResponseEntity.ok(postsPages);
 	}
