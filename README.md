@@ -19,7 +19,7 @@
 ### 1. 회원가입
 ### 2. 로그인
 
-# :male-construction-worker: 박태순
+# 박태순
 ### 1. 게시글 CRUD 및 페이징
 ### 2. 댓글 CRUD
 
