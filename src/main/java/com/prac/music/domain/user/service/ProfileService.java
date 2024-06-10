@@ -51,9 +51,9 @@ public class ProfileService {
         // 비밀번호 인코딩 후 업데이트
         if (ckePassword) {
             String encodedPassword = passwordEncoder.encode(requestDto.getNewPassword());
-            getUser.profileUpdate(requestDto, encodedPassword, imageUrl);
+            getUser.inPasswordProfileUpdate(requestDto, encodedPassword, imageUrl);
         } else {
-            getUser.profileUpdate(requestDto, imageUrl);
+            getUser.nonPasswordProfileUpdate(requestDto, imageUrl);
         }
 
         return "프로필이 수정되었습니다.";

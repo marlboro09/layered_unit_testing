@@ -44,19 +44,18 @@ public class User extends BaseTimeEntity {
     @Column(name = "profile_Image")
     private String profileImage;
 
-
     public boolean isExist() {
         return this.userStatusEnum == UserStatusEnum.NORMAL;
     }
 
-    public void profileUpdate(ProfileRequestDto requestDto, String profileImage) {
+    public void nonPasswordProfileUpdate(ProfileRequestDto requestDto, String profileImage) {
         this.name = requestDto.getName();
         this.email = requestDto.getEmail();
         this.intro = requestDto.getIntro();
         this.profileImage = profileImage;
     }
 
-    public void profileUpdate(ProfileRequestDto requestDto, String encodedPasswdDto, String profileImage) {
+    public void inPasswordProfileUpdate(ProfileRequestDto requestDto, String encodedPasswdDto, String profileImage) {
         this.name = requestDto.getName();
         this.email = requestDto.getEmail();
         this.intro = requestDto.getIntro();
