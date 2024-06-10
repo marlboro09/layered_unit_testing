@@ -22,24 +22,27 @@ import java.io.IOException;
 
 @Slf4j(topic = "JWT 검증 및 인가")
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
-
     private final JwtService jwtService;
     private final UserDetailsServiceImpl userDetailsService;
     private final UserRepository userRepository;
 
-    public JwtAuthorizationFilter(JwtService jwtService, UserDetailsServiceImpl userDetailsService, UserRepository userRepository) {
+    public JwtAuthorizationFilter(JwtService jwtService,
+                                  UserDetailsServiceImpl userDetailsService,
+                                  UserRepository userRepository) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
         this.userRepository = userRepository;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
-        String tokenValue = jwtService.getJwtFromHeader(req);
+        String tokenValue = jwtService.getJwtFromHeader(request);
 
         log.info(tokenValue);
-        if (StringUtils.hasText(tokenValue) && !req.getRequestURI().startsWith("/api/login")) {
+        if (StringUtils.hasText(tokenValue) && !request.getRequestURI().startsWith("/api/login")) {
 
             if (!jwtService.validateToken(tokenValue)) {
                 log.error("Token Error");
@@ -71,7 +74,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     jwtService.createRefreshToken(user.getUserId());
                     log.info("새로운 토큰이 생성되었습니다.");
                     setAuthentication(claims.getSubject());
-                    filterChain.doFilter(req, res);
+                    filterChain.doFilter(request, response);
                 } else {
                     // 리프레시 토큰도 만료된 경우
                     throw new IllegalArgumentException("다시 재로그인해주세요");
@@ -81,9 +84,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 setAuthentication(claims.getSubject());
             }
         }
-        filterChain.doFilter(req, res);
+        filterChain.doFilter(request, response);
     }
-
 
     // 인증 처리
     public void setAuthentication(String username) {

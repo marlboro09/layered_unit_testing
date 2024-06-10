@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class CommentRequestDto {
-	private String contents;
+    private String contents;
 
-	@Builder
-	public CommentRequestDto(String contents) {
-		this.contents = contents;
-	}
+    @Builder
+    public CommentRequestDto(String contents) {
+        this.contents = contents;
+    }
 }

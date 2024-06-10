@@ -9,19 +9,18 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class FilterConfig {
+    private final JwtService jwtService;
 
-	private final JwtService jwtService;
+    @Autowired
+    public FilterConfig(JwtService jwtService) {
+        this.jwtService = jwtService;
+    }
 
-	@Autowired
-	public FilterConfig(JwtService jwtService) {
-		this.jwtService = jwtService;
-	}
-
-	@Bean
-	public FilterRegistrationBean<JwtFilter> jwtFilter() {
-		FilterRegistrationBean<JwtFilter> registrationBean = new FilterRegistrationBean<>();
-		registrationBean.setFilter(new JwtFilter(jwtService));
-		registrationBean.addUrlPatterns("/api/users/*","/api/boards/*");
-		return registrationBean;
-	}
+    @Bean
+    public FilterRegistrationBean<JwtFilter> jwtFilter() {
+        FilterRegistrationBean<JwtFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new JwtFilter(jwtService));
+        registrationBean.addUrlPatterns("/api/users/*", "/api/boards/*");
+        return registrationBean;
+    }
 }

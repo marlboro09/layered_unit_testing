@@ -29,19 +29,25 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping
-    public ResponseEntity<BoardResponseDto> createBoard(@RequestPart(value = "files", required = false) List<MultipartFile> files, @RequestPart(value = "board") BoardRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+    public ResponseEntity<BoardResponseDto> createBoard(@RequestPart(value = "files", required = false) List<MultipartFile> files,
+                                                        @RequestPart(value = "board") BoardRequestDto requestDto,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         BoardResponseDto responseDto = boardService.createBoard(requestDto, userDetails.getUser(), files);
         return ResponseEntity.ok(responseDto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable("id") Long id, @RequestPart(value = "files", required = false) List<MultipartFile> files, @RequestPart(value = "board") UpdateRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+    public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable("id") Long id,
+                                                        @RequestPart(value = "files", required = false) List<MultipartFile> files,
+                                                        @RequestPart(value = "board") UpdateRequestDto requestDto,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         BoardResponseDto responseDto = boardService.updateBoard(id, requestDto, userDetails.getUser(), files);
         return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBoard(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<Void> deleteBoard(@PathVariable("id") Long id,
+                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         boardService.deleteBoard(id, userDetails.getUser());
         return ResponseEntity.noContent().build();
     }

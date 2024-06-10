@@ -9,21 +9,21 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 public class CommentResponseDto {
-	private Long id;
+    private Long id;
 
-	private String contents;
+    private String contents;
 
-	private Long boardId;
+    private Long boardId;
 
-	private Long userId;
+    private Long userId;
 
-	private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
-	public CommentResponseDto(Comment comment) {
-		this.id = comment.getId();
-		this.contents = comment.getContents();
-		this.boardId = comment.getBoard().getId();
-		this.userId = comment.getUser().getId();
-		this.updatedAt = comment.getCreatedAt();
-	}
+    public CommentResponseDto(Comment comment) {
+        this.id = comment.getId();
+        this.contents = comment.getContents();
+        this.boardId = comment.getBoard().getId();
+        this.userId = comment.getUser().getId();
+        this.updatedAt = comment.getCreatedAt();
+    }
 }
