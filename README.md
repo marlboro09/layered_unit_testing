@@ -13,9 +13,9 @@
 ### 9. JPA
 ### 10. GitHub
 
-# :male-detective: 담당기능
+# 담당기능
 
-# :female-construction-worker::skin-tone-2: 이세비 
+# 이세비 
 ### 1. 회원가입
 ### 2. 로그인
 
@@ -23,15 +23,15 @@
 ### 1. 게시글 CRUD 및 페이징
 ### 2. 댓글 CRUD
 
-# :female-construction-worker::skin-tone-2: 박민영
+# 박민영
 ### 1. 프로필 수정 및 조회
 ### 2. 좋아요 기능
 
-# :male-construction-worker: 이민호
+# 이민호
 ### 1. 로그아웃 및 회원탈퇴
 ### 2. 이메일 인증 구현
 
-# :male-construction-worker: 함승완
+# 함승완
 ### 1. AWS S3를 이용한 미디어파일 기능 구현
 
 # ERD
