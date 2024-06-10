@@ -57,7 +57,7 @@ public class UserService {
                 .name(requestDto.getName())
                 .email(requestDto.getEmail())
                 .intro(requestDto.getIntro())
-                .userStatusEnum(UserStatusEnum.NORMAL)
+                .userStatusEnum(UserStatusEnum.TEMPORARY)
                 .profileImage(imageUrl)
                 .build();
 
