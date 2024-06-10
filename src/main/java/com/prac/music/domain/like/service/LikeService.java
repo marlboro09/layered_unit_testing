@@ -2,17 +2,14 @@ package com.prac.music.domain.like.service;
 
 import com.prac.music.domain.board.entity.Board;
 import com.prac.music.domain.board.entity.BoardLike;
-import com.prac.music.domain.board.repository.BoardRepository;
 import com.prac.music.domain.board.service.BoardService;
 import com.prac.music.domain.comment.entity.Comment;
 import com.prac.music.domain.comment.entity.CommentLike;
-import com.prac.music.domain.comment.repository.CommentRepository;
 import com.prac.music.domain.comment.service.CommentService;
 import com.prac.music.domain.like.repository.BoardLikeRepository;
 import com.prac.music.domain.like.repository.CommentLikeRepository;
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.service.ProfileService;
-import com.prac.music.exception.CommentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

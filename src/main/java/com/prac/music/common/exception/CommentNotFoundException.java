@@ -1,4 +1,4 @@
-package com.prac.music.exception;
+package com.prac.music.common.exception;
 
 public class CommentNotFoundException extends RuntimeException {
 	public CommentNotFoundException(String message) {

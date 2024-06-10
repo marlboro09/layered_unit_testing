@@ -1,4 +1,4 @@
-package com.prac.music.exception;
+package com.prac.music.common.exception;
 
 public class BoardNotFoundException extends RuntimeException {
 	public BoardNotFoundException(String message) {

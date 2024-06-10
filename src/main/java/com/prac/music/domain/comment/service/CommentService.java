@@ -5,13 +5,12 @@ import com.prac.music.domain.board.repository.BoardRepository;
 import com.prac.music.domain.comment.dto.CommentRequestDto;
 import com.prac.music.domain.comment.dto.CommentResponseDto;
 import com.prac.music.domain.comment.dto.CommentUpdateRequestDto;
-import com.prac.music.domain.comment.dto.CommentUpdateResponseDto;
 import com.prac.music.domain.comment.entity.Comment;
 import com.prac.music.domain.comment.repository.CommentRepository;
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.repository.UserRepository;
-import com.prac.music.exception.CommentNotFoundException;
-import com.prac.music.exception.UnauthorizedAccessException;
+import com.prac.music.common.exception.CommentNotFoundException;
+import com.prac.music.common.exception.UnauthorizedAccessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,7 +41,7 @@ public class CommentService {
 	}
 
 	@Transactional
-	public CommentUpdateResponseDto updateComment(Long commentId, User user, CommentUpdateRequestDto requestDto) {
+	public CommentResponseDto updateComment(Long commentId, User user, CommentUpdateRequestDto requestDto) {
 		Comment comment = findCommentById(commentId);
 		User persistentUser = findUserById(user.getId());
 
@@ -50,7 +49,7 @@ public class CommentService {
 
 		comment.update(requestDto.getContents());
 		Comment updatedComment = commentRepository.save(comment);
-		return new CommentUpdateResponseDto(updatedComment);
+		return new CommentResponseDto(updatedComment);
 	}
 
 	@Transactional
@@ -80,7 +79,7 @@ public class CommentService {
 
 	private void validateUserAuthorization(Comment comment, User user) {
 		if (!comment.getUser().equals(user)) {
-			throw new UnauthorizedAccessException("권한이 없습니다.");
+			throw new UnauthorizedAccessException("");
 		}
 	}
 }

@@ -3,7 +3,6 @@ package com.prac.music.domain.board.controller;
 import com.prac.music.domain.board.dto.BoardRequestDto;
 import com.prac.music.domain.board.dto.BoardResponseDto;
 import com.prac.music.domain.board.dto.UpdateRequestDto;
-import com.prac.music.domain.board.dto.UpdateResponseDto;
 import com.prac.music.domain.board.service.BoardService;
 import com.prac.music.domain.user.security.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,8 +35,8 @@ public class BoardController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<UpdateResponseDto> updateBoard(@PathVariable("id") Long id,@RequestPart(value = "files") List<MultipartFile> files,@RequestPart(value = "board") UpdateRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
-		UpdateResponseDto responseDto = boardService.updateBoard(id, requestDto, userDetails.getUser(),files);
+	public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable("id") Long id,@RequestPart(value = "files") List<MultipartFile> files,@RequestPart(value = "board") UpdateRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+		BoardResponseDto responseDto = boardService.updateBoard(id, requestDto, userDetails.getUser(),files);
 		return ResponseEntity.ok(responseDto);
 	}
 
@@ -55,7 +54,7 @@ public class BoardController {
 
 	@GetMapping("/paging")
 	public ResponseEntity<Page<BoardResponseDto>> paging(
-		@Parameter(hidden = true) @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+		@Parameter(hidden = true) @PageableDefault(size = 10, sort = "updatedAt", direction = Sort.Direction.DESC) Pageable pageable) {
 		Page<BoardResponseDto> postsPages = boardService.paging(pageable);
 		return ResponseEntity.ok(postsPages);
 	}
