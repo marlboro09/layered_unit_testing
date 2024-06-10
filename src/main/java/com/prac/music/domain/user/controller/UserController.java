@@ -23,7 +23,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(@Valid @RequestPart(value = "user") SignupRequestDto requestDto, @RequestPart(value = "file") MultipartFile file) throws IOException {
+    public ResponseEntity<User> signup(@Valid @RequestPart(value = "user") SignupRequestDto requestDto, @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
         return ResponseEntity.ok(userService.createUser(requestDto, file));
     }
 

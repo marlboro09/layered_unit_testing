@@ -46,12 +46,14 @@ public class BoardService {
 			.build();
         boardRepository.save(board);
 
-		if(files.size() > 5) {
-			throw new IllegalArgumentException("파일은 5개까지 올릴 수 있습니다.");
-		}
+
 
 		if(files != null && !files.isEmpty()) {
+			if(files.size() > 5) {
+				throw new IllegalArgumentException("파일은 5개까지 올릴 수 있습니다.");
+			}
 			List<BoardFiles> boardFiles = new ArrayList<>();
+
 			for (MultipartFile file : files) {
 				String fileUrl = s3Service.s3Upload(file);
 
@@ -63,7 +65,7 @@ public class BoardService {
 
 				boardFiles.add(boardFile);
 			}
-            boardFilesRepository.saveAll(boardFiles);
+			boardFilesRepository.saveAll(boardFiles);
 		}
 		return new BoardResponseDto(board);
 

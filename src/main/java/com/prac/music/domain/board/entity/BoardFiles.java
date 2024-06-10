@@ -15,12 +15,12 @@ import lombok.NoArgsConstructor;
 @Table(name = "board_files")
 public class BoardFiles extends BaseTimeEntity {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String file;
 
-    @ManyToOne (fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
 }
