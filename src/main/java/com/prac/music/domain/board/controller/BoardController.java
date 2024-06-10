@@ -73,7 +73,7 @@ public class BoardController {
 		return ResponseEntity.ok(responseDto);
 	}
 
-	@GetMapping("/boards")
+	@GetMapping
 	public ResponseEntity<Page<BoardResponseDto>> getBoards(
 		@RequestParam(value = "page", defaultValue = "1") int page,
 		@RequestParam(value = "size", defaultValue = "10") int size,
