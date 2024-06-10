@@ -1,6 +1,6 @@
 package com.prac.music.domain.mail.service;
 
-import com.prac.music.common.exception.UserNotFoundException;
+import com.prac.music.common.exception.MailServiceException;
 import com.prac.music.domain.mail.dto.MailRequestDto;
 import com.prac.music.domain.mail.dto.VerifyRequestDto;
 import com.prac.music.domain.mail.entity.Mail;
@@ -43,7 +43,7 @@ public class MailService {
         LocalDateTime now = LocalDateTime.now();
         User user = getUserByEmail(requestDto.getEmail());
         Mail mail = mailRepository.findByEmail(user.getEmail()).orElseThrow(
-                () -> new IllegalArgumentException("잘못된 이메일입니다.")
+                () -> new MailServiceException("잘못된 이메일입니다.")
         );
 
         LocalDateTime timeLimit = mail.getCreatedAt().plusSeconds(EXPIRED_TIME);
@@ -51,7 +51,7 @@ public class MailService {
         String code = requestDto.getCode();
 
         if (now.isAfter(timeLimit)) {
-            throw new IllegalArgumentException("만료된 인증코드입니다.");
+            throw new MailServiceException("만료된 인증코드입니다.");
         }
 
         if (targetCode.equals(code)) {
@@ -102,7 +102,7 @@ public class MailService {
 
     private User getUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(
-                () -> new UserNotFoundException(email + "에 해당하는 사용자를 찾을 수 없습니다.")
+                () -> new MailServiceException(email + "에 해당하는 사용자를 찾을 수 없습니다.")
         );
     }
 

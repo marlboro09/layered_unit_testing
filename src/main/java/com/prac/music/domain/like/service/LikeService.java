@@ -1,5 +1,6 @@
 package com.prac.music.domain.like.service;
 
+import com.prac.music.common.exception.LikeServiceException;
 import com.prac.music.domain.board.entity.Board;
 import com.prac.music.domain.board.entity.BoardLike;
 import com.prac.music.domain.board.service.BoardService;
@@ -69,7 +70,7 @@ public class LikeService {
 
     private void checkIfUserLike(Sharer sharer, User user) {
         if (sharer.getUser().getId().equals(user.getId())) {
-            throw new IllegalArgumentException("자신이 작성한 컨텐츠에는 좋아요를 남길 수 없습니다.");
+            throw new LikeServiceException("자신이 작성한 컨텐츠에는 좋아요를 남길 수 없습니다.");
         }
     }
 }
