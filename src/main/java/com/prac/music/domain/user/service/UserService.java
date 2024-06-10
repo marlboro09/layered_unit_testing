@@ -16,7 +16,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,9 +97,6 @@ public class UserService {
         }
 
         String password = requestDto.getPassword();
-
-        System.out.println("사용자 비밀번호 : " + user.getPassword());
-        System.out.println("입력된 비밀번호 : " + password);
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new PasswordRuntimeException("잘못된 비밀번호입니다.");

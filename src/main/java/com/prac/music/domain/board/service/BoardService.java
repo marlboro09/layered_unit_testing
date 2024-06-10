@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.prac.music.common.exception.UserServiceException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -133,7 +134,7 @@ public class BoardService {
 
 	private User findUserById(Long userId) {
 		return userRepository.findById(userId)
-			.orElseThrow(() -> new BoardServiceException("사용자 ID " + userId + "를 찾을 수 없습니다."));
+			.orElseThrow(() -> new UserServiceException("사용자 ID " + userId + "를 찾을 수 없습니다."));
 	}
 
 	public Board findBoardById(Long boardId) {

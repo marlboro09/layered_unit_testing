@@ -1,7 +1,6 @@
 package com.prac.music.domain.user.entity;
 
 import com.prac.music.domain.user.dto.ProfileRequestDto;
-import com.prac.music.domain.user.dto.SignupRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

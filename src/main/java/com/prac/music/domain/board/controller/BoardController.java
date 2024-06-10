@@ -35,54 +35,52 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/boards")
 public class BoardController {
 
-	private final BoardService boardService;
+    private final BoardService boardService;
 
-	@PostMapping
-	public ResponseEntity<BoardResponseDto> createBoard(@RequestPart(value = "files", required = false) List<MultipartFile> files,
-		@RequestPart(value = "board") BoardRequestDto requestDto,
-		@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
-		BoardResponseDto responseDto = boardService.createBoard(requestDto, userDetails.getUser(), files);
-		return ResponseEntity.ok(responseDto);
-	}
+    @PostMapping
+    public ResponseEntity<BoardResponseDto> createBoard(@RequestPart(value = "files", required = false) List<MultipartFile> files,
+                                                        @RequestPart(value = "board") BoardRequestDto requestDto,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        BoardResponseDto responseDto = boardService.createBoard(requestDto, userDetails.getUser(), files);
+        return ResponseEntity.ok(responseDto);
+    }
 
-	@PutMapping("/{id}")
-	public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable("id") Long id,
-		@RequestPart(value = "files", required = false) List<MultipartFile> files,
-		@RequestPart(value = "board") UpdateRequestDto requestDto,
-		@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
-		BoardResponseDto responseDto = boardService.updateBoard(id, requestDto, userDetails.getUser(), files);
-		return ResponseEntity.ok(responseDto);
-	}
+    @PutMapping("/{id}")
+    public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable("id") Long id,
+                                                        @RequestPart(value = "files", required = false) List<MultipartFile> files,
+                                                        @RequestPart(value = "board") UpdateRequestDto requestDto,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        BoardResponseDto responseDto = boardService.updateBoard(id, requestDto, userDetails.getUser(), files);
+        return ResponseEntity.ok(responseDto);
+    }
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteBoard(@PathVariable("id") Long id,
-		@AuthenticationPrincipal UserDetailsImpl userDetails) {
-		boardService.deleteBoard(id, userDetails.getUser());
-		return ResponseEntity.noContent().build();
-	}
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBoard(@PathVariable("id") Long id,
+                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        boardService.deleteBoard(id, userDetails.getUser());
+        return ResponseEntity.noContent().build();
+    }
 
-	@GetMapping("/list")
-	public ResponseEntity<List<BoardResponseDto>> getAllBoards() {
-		List<BoardResponseDto> responseDtos = boardService.getAllBoard();
-		return ResponseEntity.ok(responseDtos);
-	}
+    @GetMapping("/list")
+    public ResponseEntity<List<BoardResponseDto>> getAllBoards() {
+        List<BoardResponseDto> responseDtos = boardService.getAllBoard();
+        return ResponseEntity.ok(responseDtos);
+    }
 
-	@GetMapping("/{id}")
-	public ResponseEntity<BoardResponseDto> getBoard(@PathVariable(value = "boardId") Long id) {
-		BoardResponseDto responseDto = boardService.getBoardById(id);
-		return ResponseEntity.ok(responseDto);
-	}
+    @GetMapping("/{id}")
+    public ResponseEntity<BoardResponseDto> getBoard(@PathVariable(value = "boardId") Long id) {
+        BoardResponseDto responseDto = boardService.getBoardById(id);
+        return ResponseEntity.ok(responseDto);
+    }
 
-	@GetMapping
-	public ResponseEntity<Page<BoardResponseDto>> getBoards(
-		@RequestParam(value = "page", defaultValue = "1") int page,
-		@RequestParam(value = "size", defaultValue = "10") int size,
-		@RequestParam(value = "sort", defaultValue = "createdAt") String sort,
-		@RequestParam(value = "direction", defaultValue = "DESC") Sort.Direction direction) {
-
-		// 페이지 번호는 1부터 시작하지만, Spring Data JPA는 0부터 시작하므로 1을 빼줍니다.
-		Pageable pageable = PageRequest.of(page - 1, size, Sort.by(direction, sort));
-		Page<BoardResponseDto> postsPages = boardService.paging(pageable);
-		return ResponseEntity.ok(postsPages);
-	}
+    @GetMapping
+    public ResponseEntity<Page<BoardResponseDto>> getBoards(@RequestParam(value = "page", defaultValue = "1") int page,
+                                                            @RequestParam(value = "size", defaultValue = "10") int size,
+                                                            @RequestParam(value = "sort", defaultValue = "updatedAt") String sort,
+                                                            @RequestParam(value = "direction", defaultValue = "DESC") Sort.Direction direction) {
+        // 페이지 번호는 1부터 시작하지만, Spring Data JPA는 0부터 시작하므로 1을 빼줍니다.
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(direction, sort));
+        Page<BoardResponseDto> postsPages = boardService.paging(pageable);
+        return ResponseEntity.ok(postsPages);
+    }
 }
