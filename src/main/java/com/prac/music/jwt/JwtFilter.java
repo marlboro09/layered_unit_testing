@@ -12,27 +12,28 @@ import java.io.IOException;
 
 public class JwtFilter extends OncePerRequestFilter {
 
-	private final JwtService jwtService;
+    private final JwtService jwtService;
 
-	public JwtFilter(JwtService jwtService) {
-		this.jwtService = jwtService;
-	}
+    public JwtFilter(JwtService jwtService) {
+        this.jwtService = jwtService;
+    }
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-		throws ServletException, IOException {
-		String token = jwtService.getJwtFromHeader(request);
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+									HttpServletResponse response,
+									FilterChain filterChain) throws ServletException, IOException {
+        String token = jwtService.getJwtFromHeader(request);
 
-		if (token != null && !token.isEmpty()) {
-			if (jwtService.validateToken(token)) {
-				Claims claims = jwtService.getUserInfoFromToken(token);
-				request.setAttribute("username", claims.getSubject());
-			} else {
-				response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid JWT token");
-				return;
-			}
-		}
+        if (token != null && !token.isEmpty()) {
+            if (jwtService.validateToken(token)) {
+                Claims claims = jwtService.getUserInfoFromToken(token);
+                request.setAttribute("username", claims.getSubject());
+            } else {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid JWT token");
+                return;
+            }
+        }
 
-		filterChain.doFilter(request, response);
-	}
+        filterChain.doFilter(request, response);
+    }
 }

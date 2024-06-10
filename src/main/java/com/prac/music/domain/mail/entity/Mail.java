@@ -31,7 +31,7 @@ public class Mail extends BaseTimeEntity {
     private User user;
 
     @Builder
-    public Mail (User user) {
+    public Mail(User user) {
         this.user = user;
         this.email = user.getEmail();
         this.code = "";

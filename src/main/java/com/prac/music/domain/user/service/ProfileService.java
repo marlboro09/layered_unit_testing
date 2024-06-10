@@ -1,11 +1,11 @@
 package com.prac.music.domain.user.service;
 
+import com.prac.music.common.exception.UserNotFoundException;
 import com.prac.music.common.service.S3Service;
 import com.prac.music.domain.user.dto.ProfileRequestDto;
 import com.prac.music.domain.user.dto.ProfileResponseDto;
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.repository.UserRepository;
-import com.prac.music.common.exception.UserNotFoundException;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,14 +31,16 @@ public class ProfileService {
 
     // 유저 프로필 수정
     @Transactional
-    public String updateProfile(ProfileRequestDto requestDto, User user, MultipartFile file) throws IOException {
+    public String updateProfile(ProfileRequestDto requestDto,
+                                User user,
+                                MultipartFile file) throws IOException {
         User getUser = findUserById(user.getUserId());
 
         String imageUrl = "";
         // 프로필사진 업데이트 안했을 시
-        if(file != null && !file.isEmpty()) {
+        if (file != null && !file.isEmpty()) {
             imageUrl = s3Service.s3Upload(file);
-        } else{
+        } else {
             imageUrl = "null";
         }
 
@@ -48,9 +50,9 @@ public class ProfileService {
         // 비밀번호 인코딩 후 업데이트
         if (ckePassword) {
             String encodedPassword = passwordEncoder.encode(requestDto.getNewPassword());
-            getUser.update(requestDto, encodedPassword,imageUrl);
+            getUser.update(requestDto, encodedPassword, imageUrl);
         } else {
-            getUser.update(requestDto,imageUrl);
+            getUser.update(requestDto, imageUrl);
         }
 
         return "프로필이 수정되었습니다.";
@@ -59,13 +61,15 @@ public class ProfileService {
 
     // 해당 유저 조희
     public User findUserById(String userId) {
-        return userRepository.findByUserId(userId).orElseThrow(()->
-            new UserNotFoundException("등록된 회원이 아닙니다.")
+        return userRepository.findByUserId(userId).orElseThrow(() ->
+                new UserNotFoundException("등록된 회원이 아닙니다.")
         );
     }
 
     // 비밀번호 유효성 검사
-    private Boolean validatePassword(String password, String newPassword, String userPassword) {
+    private Boolean validatePassword(String password,
+                                     String newPassword,
+                                     String userPassword) {
         if (StringUtils.isBlank(password) && StringUtils.isBlank(newPassword)) {
             return false; // 둘 다 비어있으면 검사하지 않음
         }

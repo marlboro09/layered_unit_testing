@@ -9,5 +9,6 @@ import java.util.Optional;
 
 public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> {
     Optional<CommentLike> findByCommentAndUser(Comment comment, User getUser);
+
     int countLikesByCommentId(Long commentId);
 }

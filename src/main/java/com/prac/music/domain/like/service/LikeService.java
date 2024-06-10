@@ -27,7 +27,8 @@ public class LikeService {
     private final ProfileService profileService;
 
     @Transactional
-    public int boardLike(Long boardId, User user) {
+    public int boardLike(Long boardId,
+                         User user) {
         Board board = boardService.findBoardById(boardId);
         User getUser = profileService.findUserById(user.getUserId());
 
@@ -49,7 +50,9 @@ public class LikeService {
     }
 
     @Transactional
-    public int commentLike(Long boardId, Long commentId, User user) {
+    public int commentLike(Long boardId,
+                           Long commentId,
+                           User user) {
         boardService.findBoardById(boardId);
         User getUser = profileService.findUserById(user.getUserId());
         Comment comment = commentService.findCommentById(commentId);

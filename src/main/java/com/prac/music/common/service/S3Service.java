@@ -24,7 +24,7 @@ public class S3Service {
 
     @MeasureExecutionTime
     public String s3Upload(MultipartFile file) throws IOException {
-        if(file != null){
+        if (file != null) {
             try {
                 String fileName = file.getOriginalFilename();
                 String ext = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase(); // 확장자를 소문자로 변환

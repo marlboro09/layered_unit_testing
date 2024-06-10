@@ -2,7 +2,6 @@ package com.prac.music.domain.like.entity;
 
 import com.prac.music.domain.user.entity.BaseTimeEntity;
 import com.prac.music.domain.user.entity.User;
-
 import jakarta.persistence.*;
 
 @MappedSuperclass
@@ -23,5 +22,4 @@ public abstract class Like extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "content_type", nullable = false)
     protected ContentType contentType;
-
 }

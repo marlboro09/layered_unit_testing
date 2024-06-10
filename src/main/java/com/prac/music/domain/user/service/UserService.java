@@ -34,14 +34,15 @@ public class UserService {
     private final JwtService jwtService;
     private final S3Service s3Service;
 
-    public User createUser(SignupRequestDto requestDto, MultipartFile file) throws IOException {
+    public User createUser(SignupRequestDto requestDto,
+                           MultipartFile file) throws IOException {
         String userId = requestDto.getUserId();
         String password = passwordEncoder.encode(requestDto.getPassword());
         requestDto.setPassword(password);
         String imageUrl = "";
-        if(file != null && !file.isEmpty()) {
-          imageUrl = s3Service.s3Upload(file);
-        } else{
+        if (file != null && !file.isEmpty()) {
+            imageUrl = s3Service.s3Upload(file);
+        } else {
             imageUrl = "null";
         }
         Optional<User> checkUser = userRepository.findByUserId(userId);
@@ -80,7 +81,8 @@ public class UserService {
     }
 
     @Transactional
-    public void signoutUser(SignoutRequestDto requestDto, User user) {
+    public void signoutUser(SignoutRequestDto requestDto,
+                            User user) {
         if (!user.isExist()) {
             throw new IllegalArgumentException("이미 탈퇴된 사용자입니다.");
         }
@@ -98,7 +100,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    private boolean checkUserStatus (User user) {
+    private boolean checkUserStatus(User user) {
         return user.getUserStatusEnum().equals(UserStatusEnum.NORMAL);
     }
 }
