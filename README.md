@@ -1,7 +1,7 @@
-# :musical_keyboard:뮤직뉴스피드
-# 음악에 대한 이슈들이 있는 웹 페이지 입니다.
+# :musical_keyboard: 뮤직 뉴스피드
+# :guitar: 음악에 대한 이슈들이 있는 웹 페이지 입니다.
 
-# 사용 기술
+# :wrench: 사용 기술
 ### 1. Java 17
 ### 2. Spring Boot 3.3.0
 ### 3. Google SMTP
@@ -13,25 +13,25 @@
 ### 9. JPA
 ### 10. GitHub
 
-# 담당기능
+# :male-detective: 담당기능
 
-# 이세비 
+# :female-construction-worker::skin-tone-2: 이세비 
 ### 1. 회원가입
 ### 2. 로그인
 
-# 박태순
+# :male-construction-worker: 박태순
 ### 1. 게시글 CRUD 및 페이징
 ### 2. 댓글 CRUD
 
-# 박민영
+# :female-construction-worker::skin-tone-2: 박민영
 ### 1. 프로필 수정 및 조회
 ### 2. 좋아요 기능
 
-# 이민호
+# :male-construction-worker: 이민호
 ### 1. 로그아웃 및 회원탈퇴
 ### 2. 이메일 인증 구현
 
-# 함승완
+# :male-construction-worker: 함승완
 ### 1. AWS S3를 이용한 미디어파일 기능 구현
 
 # ERD
