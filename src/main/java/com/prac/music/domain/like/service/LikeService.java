@@ -6,6 +6,7 @@ import com.prac.music.domain.board.service.BoardService;
 import com.prac.music.domain.comment.entity.Comment;
 import com.prac.music.domain.comment.entity.CommentLike;
 import com.prac.music.domain.comment.service.CommentService;
+import com.prac.music.domain.like.entity.Sharer;
 import com.prac.music.domain.like.repository.BoardLikeRepository;
 import com.prac.music.domain.like.repository.CommentLikeRepository;
 import com.prac.music.domain.user.entity.User;
@@ -30,19 +31,15 @@ public class LikeService {
     public int boardLike(Long boardId, User user) {
         Board board = boardService.findBoardById(boardId);
         User getUser = profileService.findUserById(user.getUserId());
-
-        if (board.getUser().getId().equals(getUser.getId())) {
-            throw new IllegalArgumentException("자신이 작성한 게시물에는 좋아요를 남길 수 없습니다.");
-        }
+        BoardLike boardLike = new BoardLike(board, getUser);
+        checkIfUserLike(boardLike, getUser);
 
         Optional<BoardLike> existingLike = boardLikeRepository.findByBoardAndUser(board, getUser);
-
         if (existingLike.isPresent()) {
             // 이미 좋아요를 누른 상태라면 취소
             boardLikeRepository.delete(existingLike.get());
         } else {
             // 좋아요 추가
-            BoardLike boardLike = new BoardLike(board, getUser);
             boardLikeRepository.save(boardLike);
         }
         return boardLikeRepository.countLikesByBoardId(boardId);
@@ -53,9 +50,8 @@ public class LikeService {
         boardService.findBoardById(boardId);
         User getUser = profileService.findUserById(user.getUserId());
         Comment comment = commentService.findCommentById(commentId);
-        if (comment.getUser().getId().equals(getUser.getId())) {
-            throw new IllegalArgumentException("자신이 작성한 댓글에는 좋아요를 남길 수 없습니다.");
-        }
+        CommentLike commentLike = new CommentLike(comment, getUser);
+        checkIfUserLike(commentLike, getUser);
 
         Optional<CommentLike> existingLike = commentLikeRepository.findByCommentAndUser(comment, getUser);
         if (existingLike.isPresent()) {
@@ -63,10 +59,14 @@ public class LikeService {
             commentLikeRepository.delete(existingLike.get());
         } else {
             // 좋아요 추가
-            CommentLike commentLike = new CommentLike(comment, getUser);
             commentLikeRepository.save(commentLike);
         }
         return commentLikeRepository.countLikesByCommentId(commentId);
     }
 
+    private void checkIfUserLike(Sharer sharer, User user) {
+        if (sharer.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("자신이 작성한 컨텐츠에는 좋아요를 남길 수 없습니다.");
+        }
+    }
 }
