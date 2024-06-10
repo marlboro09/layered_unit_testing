@@ -35,10 +35,10 @@
 ### 1. AWS S3를 이용한 미디어파일 기능 구현
 
 # ERD
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/83c75a39-3aba-4ba4-a792-7aefe4b07895/4684e5d8-ff50-4648-8f50-febad3aee69b/Untitled.png)
+![Untitled (1)](https://github.com/hamseungwan2023/music/assets/125807759/3a5de27a-f333-4903-9a02-19d2ed68d8c1)
 
 # 와이어프레임
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/83c75a39-3aba-4ba4-a792-7aefe4b07895/99c07489-5f2a-4a17-8e27-6053777bbd28/Untitled.png)
+![Untitled (2)](https://github.com/hamseungwan2023/music/assets/125807759/cd3fd612-1f12-45a6-b2ae-3a18566d31a3)
 
 # API 명세서 
 [API 명세서](https://www.notion.so/4c0e907c3a1149aea4cbbb3bdebc3af3?pvs=21)
