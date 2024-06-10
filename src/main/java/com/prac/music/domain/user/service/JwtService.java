@@ -1,5 +1,6 @@
 package com.prac.music.domain.user.service;
 
+import com.prac.music.common.exception.JwtServiceException;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -34,12 +35,12 @@ public class JwtService {
         Date validity = new Date(now.getTime() + minute); // 30분 유효
 
         return BEARER_PREFIX +
-            Jwts.builder()
-                .setSubject(userId)
-                .setIssuedAt(now)
-                .setExpiration(validity)
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-                .compact();
+                Jwts.builder()
+                        .setSubject(userId)
+                        .setIssuedAt(now)
+                        .setExpiration(validity)
+                        .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                        .compact();
     }
 
     public String createRefreshToken(String userId) { // 리프레시 토큰 생성
@@ -61,22 +62,21 @@ public class JwtService {
             Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
-            log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
+            throw new JwtServiceException("유효하지 않은 JWT 서명입니다.");
         } catch (UnsupportedJwtException e) {
-            log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+            throw new JwtServiceException("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
-            log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
-        } catch (ExpiredJwtException e){
+            throw new JwtServiceException("잘못된 JWT 토큰입니다.");
+        } catch (ExpiredJwtException e) {
             throw new AccessDeniedException("재로그인 해주세요");
         }
-        return false;
     }
 
     public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
     }
 
-    public String substringToken (String token) {
+    public String substringToken(String token) {
         if (StringUtils.hasText(token) && token.startsWith(BEARER_PREFIX)) {
             return token.substring(7);
         }
@@ -93,13 +93,13 @@ public class JwtService {
         return substringToken(refreshToken);
     }
 
-    public Boolean isTokenExpired(String token){
+    public Boolean isTokenExpired(String token) {
         Claims claims = getUserInfoFromToken(token);
         Date date = claims.getExpiration();
         return date.before(new Date());
     }
 
-    public Boolean isRefreshTokenExpired(String refreshToken){
+    public Boolean isRefreshTokenExpired(String refreshToken) {
         String reToken = refreshToken.substring(7);
         Claims claims = getUserInfoFromToken(reToken);
         Date date = claims.getExpiration();

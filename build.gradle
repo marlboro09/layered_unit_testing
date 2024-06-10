@@ -40,15 +40,15 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    // Swagger 설정
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
-
     //AWS S3 설정
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     implementation 'com.amazonaws:aws-java-sdk-s3:1.12.460' // AWS S3 SDK 의존성
 
     //AOP 설정
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    // mail
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail'
 }
 
 

@@ -1,19 +1,21 @@
 package com.prac.music.domain.user.dto;
 
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 public class SignupRequestDto {
-
     // 기본적인 영문, 숫자를 조합하여 최소 6자리 이상 최대 16자리 이하
     @Pattern(regexp = "^[A-Za-z0-9]{6,16}$")
     private String userId;
 
     // 기본적인 영문, 숫자를 조합하여 최소 8자리 이상 최대 16자리 이하
-    @Pattern(regexp = "^[A-Za-z0-9]{6,16}$")
+    @Size(min = 10, message = "비밀번호는 최소 10자 이상 입니다.")
+    @Pattern(
+            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{10,}$",
+            message = "비밀번호는 대소문자 포함 영문, 숫자, 특수문자를 최소 1글자씩 포함해야 합니다."
+    )
     private String password;
 
     // 한글, 영문
