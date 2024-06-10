@@ -33,15 +33,17 @@ public class ProfileService {
     @Transactional
     public String updateProfile(ProfileRequestDto requestDto, User user, MultipartFile file) throws IOException {
         User getUser = findUserById(user.getUserId());
-        String imageUrl = "";
 
-        // Dto 에 비밀번호가 들어왔는지 검사
-        Boolean ckePassword = validatePassword(requestDto.getPassword(), requestDto.getNewPassword(), getUser.getPassword());
+        String imageUrl = "";
+        // 프로필사진 업데이트 안했을 시
         if(file != null && !file.isEmpty()) {
             imageUrl = s3Service.s3Upload(file);
         } else{
             imageUrl = "null";
         }
+
+        // Dto 에 비밀번호가 들어왔는지 검사
+        Boolean ckePassword = validatePassword(requestDto.getPassword(), requestDto.getNewPassword(), getUser.getPassword());
 
         // 비밀번호 인코딩 후 업데이트
         if (ckePassword) {

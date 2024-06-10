@@ -26,36 +26,36 @@ import java.util.List;
 @RequestMapping("/api/boards")
 public class BoardController {
 
-	private final BoardService boardService;
+    private final BoardService boardService;
 
-	@PostMapping
-	public ResponseEntity<BoardResponseDto> createBoard(@RequestPart(value = "files") List<MultipartFile> files,@RequestPart(value = "board") BoardRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
-		BoardResponseDto responseDto = boardService.createBoard(requestDto, userDetails.getUser(),files);
-		return ResponseEntity.ok(responseDto);
-	}
+    @PostMapping
+    public ResponseEntity<BoardResponseDto> createBoard(@RequestPart(value = "files", required = false) List<MultipartFile> files, @RequestPart(value = "board") BoardRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        BoardResponseDto responseDto = boardService.createBoard(requestDto, userDetails.getUser(), files);
+        return ResponseEntity.ok(responseDto);
+    }
 
-	@PutMapping("/{id}")
-	public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable("id") Long id,@RequestPart(value = "files") List<MultipartFile> files,@RequestPart(value = "board") UpdateRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
-		BoardResponseDto responseDto = boardService.updateBoard(id, requestDto, userDetails.getUser(),files);
-		return ResponseEntity.ok(responseDto);
-	}
+    @PutMapping("/{id}")
+    public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable("id") Long id, @RequestPart(value = "files", required = false) List<MultipartFile> files, @RequestPart(value = "board") UpdateRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        BoardResponseDto responseDto = boardService.updateBoard(id, requestDto, userDetails.getUser(), files);
+        return ResponseEntity.ok(responseDto);
+    }
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteBoard(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-		boardService.deleteBoard(id, userDetails.getUser());
-		return ResponseEntity.noContent().build();
-	}
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBoard(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        boardService.deleteBoard(id, userDetails.getUser());
+        return ResponseEntity.noContent().build();
+    }
 
-	@GetMapping("/list")
-	public ResponseEntity<List<BoardResponseDto>> getAllBoards() {
-		List<BoardResponseDto> responseDtos = boardService.getAllBoard();
-		return ResponseEntity.ok(responseDtos);
-	}
+    @GetMapping("/list")
+    public ResponseEntity<List<BoardResponseDto>> getAllBoards() {
+        List<BoardResponseDto> responseDtos = boardService.getAllBoard();
+        return ResponseEntity.ok(responseDtos);
+    }
 
-	@GetMapping("/paging")
-	public ResponseEntity<Page<BoardResponseDto>> paging(
-		@Parameter(hidden = true) @PageableDefault(size = 10, sort = "updatedAt", direction = Sort.Direction.DESC) Pageable pageable) {
-		Page<BoardResponseDto> postsPages = boardService.paging(pageable);
-		return ResponseEntity.ok(postsPages);
-	}
+    @GetMapping("/paging")
+    public ResponseEntity<Page<BoardResponseDto>> paging(
+            @Parameter(hidden = true) @PageableDefault(size = 10, sort = "updatedAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<BoardResponseDto> postsPages = boardService.paging(pageable);
+        return ResponseEntity.ok(postsPages);
+    }
 }

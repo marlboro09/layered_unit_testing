@@ -27,7 +27,7 @@ public class ProfileController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateProfile(@PathVariable UserDetailsImpl userDetails, @RequestPart(value = "user") @Valid ProfileRequestDto requestDto, @RequestPart(value = "file") MultipartFile file) throws IOException {
+    public ResponseEntity<String> updateProfile(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails, @RequestPart(value = "user") @Valid ProfileRequestDto requestDto, @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
         String message = profileService.updateProfile(requestDto, userDetails.getUser(), file);
         return ResponseEntity.ok(message);
     }

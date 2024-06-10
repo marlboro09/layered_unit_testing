@@ -6,6 +6,9 @@ import com.prac.music.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본 생성자는 protected로 설정합니다.
@@ -25,6 +28,10 @@ public class Board extends BaseTimeEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "user_id")
 	private User user;
+
+	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<BoardFiles> boardFiles = new ArrayList<>();
+
 
 	@Builder
 	public Board(String title, String contents, User user) {
