@@ -49,16 +49,6 @@ public class User extends BaseTimeEntity {
         return this.userStatusEnum == UserStatusEnum.NORMAL;
     }
 
-    public User(SignupRequestDto requestDto, String profileImage) {
-        this.userId = requestDto.getUserId();
-        this.name = requestDto.getName();
-        this.email = requestDto.getEmail();
-        this.password = requestDto.getPassword();
-        this.intro = requestDto.getIntro();
-        this.profileImage = profileImage;
-        this.userStatusEnum = UserStatusEnum.TEMPORARY;
-    }
-
     public void profileUpdate(ProfileRequestDto requestDto, String profileImage) {
         this.name = requestDto.getName();
         this.email = requestDto.getEmail();
