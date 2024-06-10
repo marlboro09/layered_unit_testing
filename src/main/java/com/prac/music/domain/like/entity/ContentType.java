@@ -14,7 +14,7 @@ public enum ContentType {
         return this.contentType;
     }
 
-    public static class Type{
+    public static class Type {
         public static final String BOARD = "BOARD";
         public static final String COMMENT = "COMMENT";
     }

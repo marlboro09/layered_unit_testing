@@ -23,14 +23,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(@Valid @RequestPart(value = "user") SignupRequestDto requestDto, @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+    public ResponseEntity<User> signup(@Valid @RequestPart(value = "user") SignupRequestDto requestDto,
+                                       @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
         return ResponseEntity.ok(userService.createUser(requestDto, file));
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto) {
-        System.out.println("로그인 시작");
-
         return ResponseEntity.ok(userService.loginUser(requestDto));
     }
 
@@ -42,7 +41,8 @@ public class UserController {
     }
 
     @PutMapping("/signout")
-    public String signout(@RequestBody SignoutRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public String signout(@RequestBody SignoutRequestDto requestDto,
+                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         userService.signoutUser(requestDto, user);
         return "redirect:/api/users/login";

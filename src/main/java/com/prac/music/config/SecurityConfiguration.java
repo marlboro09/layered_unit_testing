@@ -44,8 +44,8 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 "/v2/api-docs", "/v3/api-docs", "/v3/api-docs/**", "/swagger-resources",
                                 "/swagger-resources/**", "/configuration/ui", "/configuration/security", "/swagger-ui/**",
-                                "/webjars/**", "/swagger-ui.html", "/api/users/login", "/api/users/signup","/api/users/email/**", "/api/boards/list"
-                                ).permitAll()
+                                "/webjars/**", "/swagger-ui.html", "/api/users/login", "/api/users/signup", "/api/users/email/**", "/api/boards/list"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthorizationFilter(jwtService, userDetailsService, userRepository), UsernamePasswordAuthenticationFilter.class)

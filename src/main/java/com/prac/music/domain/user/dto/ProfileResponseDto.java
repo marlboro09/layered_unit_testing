@@ -6,8 +6,11 @@ import lombok.Getter;
 @Getter
 public class ProfileResponseDto {
     private String userId;  // ID
+
     private String name;  // 이름
+
     private String email;  // 이메일
+
     private String intro;  // 한줄소개
 
     public ProfileResponseDto(User user) {
