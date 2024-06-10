@@ -44,14 +44,14 @@ public class BoardController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable Long id, @RequestPart(value = "files") List<MultipartFile> files, @RequestPart(value = "board") UpdateRequestDto requestDto,
+	public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable(value = "boardId") Long id, @RequestPart(value = "files") List<MultipartFile> files, @RequestPart(value = "board") UpdateRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
 		BoardResponseDto responseDto = boardService.updateBoard(id, requestDto, userDetails.getUser(), files);
 		return ResponseEntity.ok(responseDto);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteBoard(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+	public ResponseEntity<Void> deleteBoard(@PathVariable(value = "boardId") Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 		boardService.deleteBoard(id, userDetails.getUser());
 		return ResponseEntity.noContent().build();
 	}
@@ -63,7 +63,7 @@ public class BoardController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<BoardResponseDto> getBoard(@PathVariable Long id) {
+	public ResponseEntity<BoardResponseDto> getBoard(@PathVariable(value = "boardId") Long id) {
 		BoardResponseDto responseDto = boardService.getBoardById(id);
 		return ResponseEntity.ok(responseDto);
 	}
