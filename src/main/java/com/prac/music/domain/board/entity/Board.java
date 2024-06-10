@@ -1,5 +1,8 @@
 package com.prac.music.domain.board.entity;
 
+import java.util.List;
+
+import com.prac.music.domain.comment.entity.Comment;
 import com.prac.music.domain.user.entity.BaseTimeEntity;
 import com.prac.music.domain.user.entity.User;
 
@@ -25,6 +28,9 @@ public class Board extends BaseTimeEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "user_id")
 	private User user;
+
+	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private List<Comment> comments;
 
 	@Builder
 	public Board(String title, String contents, User user) {

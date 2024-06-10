@@ -7,7 +7,12 @@ import com.prac.music.domain.user.dto.SignupRequestDto;
 import com.prac.music.domain.user.entity.User;
 import com.prac.music.domain.user.security.UserDetailsImpl;
 import com.prac.music.domain.user.service.UserService;
-import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,22 +24,26 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
+@Tag(name = "User Management")
 public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(@Valid @RequestPart(value = "user") SignupRequestDto requestDto, @RequestPart(value = "file") MultipartFile file) throws IOException {
+    @Operation(requestBody = @RequestBody(content = @Content(mediaType = "multipart/form-data")))
+    public ResponseEntity<User> signup(
+        @RequestPart(value = "user") @Parameter(schema = @Schema(type = "string", format = "json")) SignupRequestDto requestDto,
+        @RequestPart(value = "file") @Parameter(schema = @Schema(type = "string", format = "binary")) MultipartFile file) throws IOException {
         return ResponseEntity.ok(userService.createUser(requestDto, file));
     }
 
     @PostMapping("/login")
+    @Operation(requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = LoginRequestDto.class))))
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto) {
-        System.out.println("로그인 시작");
-
         return ResponseEntity.ok(userService.loginUser(requestDto));
     }
 
     @PutMapping("/logout")
+    @Operation
     public String logout(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         userService.logoutUser(user);
@@ -42,6 +51,7 @@ public class UserController {
     }
 
     @PutMapping("/signout")
+    @Operation(requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = SignoutRequestDto.class))))
     public String signout(@RequestBody SignoutRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
         userService.signoutUser(requestDto, user);

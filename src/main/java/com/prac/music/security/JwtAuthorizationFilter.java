@@ -66,12 +66,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             if (jwtService.isTokenExpired(tokenValue)) {
                 // 리프레시 토큰이 유효한 경우, 새로운 토큰 생성
                 if (!jwtService.isRefreshTokenExpired(userRefreshToken)) {
-                    jwtService.createToken(user.getUserId());
-                    System.out.println("jwtService.createToken(user.getUserId()) = " + jwtService.createToken(user.getUserId()));
-                    jwtService.createRefreshToken(user.getUserId());
-                    log.info("새로운 토큰이 생성되었습니다.");
+                    String newToken = jwtService.createToken(user.getUserId());
+                    res.addHeader(JwtService.AUTHORIZATION_HEADER, newToken);
+                    log.info("새로운 토큰이 생성되었습니다: {}", newToken);
                     setAuthentication(claims.getSubject());
                     filterChain.doFilter(req, res);
+                    return;
                 } else {
                     // 리프레시 토큰도 만료된 경우
                     throw new IllegalArgumentException("다시 재로그인해주세요");
