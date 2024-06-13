@@ -1,0 +1,117 @@
+package com.sparta.layered_unit_testing.domain.user.service;
+
+import java.security.Key;
+import java.util.Date;
+
+import javax.crypto.spec.SecretKeySpec;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import com.sparta.layered_unit_testing.common.exception.JwtServiceException;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class JwtService {
+
+	@Value("${jwt.secret.key}")
+	private String secretKey;
+
+	public static final String AUTHORIZATION_HEADER = "Authorization";
+	public static final String REFRESH_TOKEN_HEADER = "RefreshToken";
+	public static final String BEARER_PREFIX = "Bearer ";
+
+	private Key getSigningKey() {
+		byte[] keyBytes = secretKey.getBytes();
+		return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
+	}
+
+	public String createToken(String userId) {
+		Date now = new Date();
+		Long minute = 30L * 60 * 1000;
+		Date validity = new Date(now.getTime() + minute); // 30분 유효
+
+		return BEARER_PREFIX +
+			Jwts.builder()
+				.setSubject(userId)
+				.setIssuedAt(now)
+				.setExpiration(validity)
+				.signWith(getSigningKey(), SignatureAlgorithm.HS256)
+				.compact();
+	}
+
+	public String createRefreshToken(String userId) { // 리프레시 토큰 생성
+		Date now = new Date();
+		Long twoWeek = 14L * 24 * 60 * 60 * 1000;
+		Date validity = new Date(now.getTime() + twoWeek);
+
+		return BEARER_PREFIX +
+			Jwts.builder()
+				.setSubject(userId)
+				.setIssuedAt(now)
+				.setExpiration(validity)
+				.signWith(getSigningKey(), SignatureAlgorithm.HS256)
+				.compact();
+	}
+
+	public boolean validateToken(String token) {
+		try {
+			Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
+			return true;
+		} catch (SecurityException | MalformedJwtException | SignatureException e) {
+			throw new JwtServiceException("유효하지 않은 JWT 서명입니다.");
+		} catch (UnsupportedJwtException e) {
+			throw new JwtServiceException("지원되지 않는 JWT 토큰입니다.");
+		} catch (IllegalArgumentException e) {
+			throw new JwtServiceException("잘못된 JWT 토큰입니다.");
+		} catch (ExpiredJwtException e) {
+			throw new AccessDeniedException("재로그인 해주세요");
+		}
+	}
+
+	public Claims getUserInfoFromToken(String token) {
+		return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
+	}
+
+	public String substringToken(String token) {
+		if (StringUtils.hasText(token) && token.startsWith(BEARER_PREFIX)) {
+			return token.substring(7);
+		}
+		return null;
+	}
+
+	public String getJwtFromHeader(HttpServletRequest request) {
+		String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+		return substringToken(bearerToken);
+	}
+
+	public String getRefreshJwtFromHeader(HttpServletRequest request) {
+		String refreshToken = request.getHeader(REFRESH_TOKEN_HEADER);
+		return substringToken(refreshToken);
+	}
+
+	public Boolean isTokenExpired(String token) {
+		Claims claims = getUserInfoFromToken(token);
+		Date date = claims.getExpiration();
+		return date.before(new Date());
+	}
+
+	public Boolean isRefreshTokenExpired(String refreshToken) {
+		String reToken = refreshToken.substring(7);
+		Claims claims = getUserInfoFromToken(reToken);
+		Date date = claims.getExpiration();
+		return date.before(new Date());
+	}
+}
