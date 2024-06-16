@@ -18,7 +18,7 @@ class BoardTest {
 
 	@Test
 	@DisplayName("Board 테스트")
-	void entitytest1() {
+	void boardCreateTest() {
 		Board board = fixtureMonkey.giveMeOne(Board.class);
 		User user = fixtureMonkey.giveMeOne(User.class);
 
@@ -29,15 +29,12 @@ class BoardTest {
 
 	@Test
 	@DisplayName("Update 테스트")
-	void entitytest2() {
-		//given
+	void boardUpdateTest() {
 		Board board = new Board();
 		Board board2 = fixtureMonkey.giveMeOne(Board.class);
 
-		//when
 		board.update(board2.getTitle(), board2.getContents());
 
-		//then
 		assertEquals(board.getTitle(), board2.getTitle());
 		assertEquals(board.getContents(), board2.getContents());
 	}

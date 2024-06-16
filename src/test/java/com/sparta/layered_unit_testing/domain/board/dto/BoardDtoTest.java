@@ -16,7 +16,7 @@ class BoardDtoTest {
 
 	@Test
 	@DisplayName("BoardRequest 테스트")
-	void BoardRequestDto() {
+	void boardRequestDto() {
 		BoardRequestDto boardRequestDto = fixtureMonkey.giveMeOne(BoardRequestDto.class);
 
 		assertThat(boardRequestDto.getTitle());
@@ -26,7 +26,7 @@ class BoardDtoTest {
 
 	@Test
 	@DisplayName("BoardResponse 테스트")
-	void BoardResponseDto() {
+	void boardResponseDto() {
 		BoardResponseDto boardResponseDto = fixtureMonkey.giveMeOne(BoardResponseDto.class);
 
 		assertThat(boardResponseDto.getBoardId());
@@ -38,7 +38,7 @@ class BoardDtoTest {
 
 	@Test
 	@DisplayName("UpdateRequest 테스트")
-	void BoardUpdateRequestDto() {
+	void boardUpdateRequestDto() {
 		UpdateRequestDto updateRequestDto = fixtureMonkey.giveMeOne(UpdateRequestDto.class);
 
 		assertThat(updateRequestDto.getTitle());
