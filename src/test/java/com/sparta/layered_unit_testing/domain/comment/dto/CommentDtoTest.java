@@ -18,7 +18,7 @@ class CommentDtoTest {
 
 	@Test
 	@DisplayName("CommentRequestDto 테스트")
-	void CommentRequestDto() {
+	void commentRequestDto() {
 		CommentRequestDto commentRequestDto = fixtureMonkey.giveMeOne(CommentRequestDto.class);
 
 		assertThat(commentRequestDto.getContents());
@@ -26,7 +26,7 @@ class CommentDtoTest {
 
 	@Test
 	@DisplayName("CommentResponsetDto 테스트")
-	void CommentResponseDto() {
+	void commentResponseDto() {
 		CommentResponseDto commentResponseDto = fixtureMonkey.giveMeOne(CommentResponseDto.class);
 		Board board = fixtureMonkey.giveMeOne(Board.class);
 		User user = fixtureMonkey.giveMeOne(User.class);
@@ -40,7 +40,7 @@ class CommentDtoTest {
 
 	@Test
 	@DisplayName("CommentUpdateRequestDto 테스트")
-	void CommentUpdateRequestDto() {
+	void commentUpdateRequestDto() {
 		CommentUpdateRequestDto commentUpdateRequestDto = fixtureMonkey.giveMeOne(CommentUpdateRequestDto.class);
 
 		assertThat(commentUpdateRequestDto.getContents());
