@@ -56,7 +56,6 @@ dependencies {
     testImplementation 'com.navercorp.fixturemonkey:fixture-monkey-starter:1.0.14'
 }
 
-
 tasks.named('test') {
     useJUnitPlatform()
 }

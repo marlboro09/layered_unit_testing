@@ -22,4 +22,8 @@ public class BaseTimeEntity {
 
 	@LastModifiedDate
 	private LocalDateTime deletedAt;
+
+	public void nonPasswordProfileUpdate(String name, String email, String intro, String profileImage) {
+
+	}
 }

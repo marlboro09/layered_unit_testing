@@ -79,4 +79,6 @@ public class User extends BaseTimeEntity {
 		this.userStatusEnum = UserStatusEnum.SECESSION;
 	}
 
+	public void nonPasswordProfileUpdate(String name, String introduction, String password) {
+	}
 }
