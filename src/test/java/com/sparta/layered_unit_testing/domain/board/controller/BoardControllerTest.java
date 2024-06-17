@@ -124,7 +124,6 @@ class BoardControllerTest {
 		BoardResponseDto responseDto = new BoardResponseDto();
 		when(boardService.createBoard(any(BoardRequestDto.class), any(User.class), any())).thenReturn(responseDto);
 
-		// when
 		mockMvc.perform(multipart("/api/boards")
 				.file(mockBoard)
 				.file(file)
@@ -136,20 +135,18 @@ class BoardControllerTest {
 	@Test
 	@DisplayName("updateBoard 테스트")
 	void testUpdateBoard() throws Exception {
-		// given
+
 		mockUserSetup();
 		UpdateRequestDto requestDto = fixtureMonkey.giveMeBuilder(UpdateRequestDto.class)
 			.setNotNull("title")
 			.setNotNull("contents")
 			.sample();
-
 		MockMultipartFile file = new MockMultipartFile(
 			"files",
 			"profileImage.png",
 			"multipart/form-data",
 			"image".getBytes()
 		);
-
 		MockMultipartFile mockBoard = new MockMultipartFile(
 			"board",
 			"",
@@ -171,17 +168,14 @@ class BoardControllerTest {
 	@Test
 	@DisplayName("deleteBoard 테스트")
 	void testDeleteBoard() throws Exception {
-		// given
 		mockUserSetup();
 
-		// when
 		ResultActions actions = mockMvc.perform(delete("/api/boards/1")
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON)
 			.principal(mockPrincipal)
 		);
 
-		// then
 		actions.andExpect(status().isNoContent())
 			.andDo(print());
 	}
@@ -189,17 +183,14 @@ class BoardControllerTest {
 	@Test
 	@DisplayName("getAllBoards 테스트")
 	void testGetAllBoards() throws Exception {
-		// given
 		List<BoardResponseDto> responseDtos = List.of(new BoardResponseDto());
 		when(boardService.getAllBoard()).thenReturn(responseDtos);
 
-		// when
 		ResultActions actions = mockMvc.perform(get("/api/boards/list")
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON)
 		);
 
-		// then
 		actions.andExpect(status().isOk())
 			.andDo(print());
 	}
@@ -207,17 +198,14 @@ class BoardControllerTest {
 	@Test
 	@DisplayName("getBoard 테스트")
 	void testGetBoard() throws Exception {
-		// given
 		BoardResponseDto responseDto = new BoardResponseDto();
 		when(boardService.getBoardById(any(Long.class))).thenReturn(responseDto);
 
-		// when
 		ResultActions actions = mockMvc.perform(get("/api/boards/1")
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON)
 		);
 
-		// then
 		actions.andExpect(status().isOk())
 			.andDo(print());
 	}
@@ -225,7 +213,6 @@ class BoardControllerTest {
 	@Test
 	@DisplayName("getBoards 테스트")
 	void testGetBoards() throws Exception {
-		// given
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("page", "1");
 		params.add("size", "10");
@@ -235,14 +222,12 @@ class BoardControllerTest {
 		Page<BoardResponseDto> responseDto = Page.empty();
 		when(boardService.paging(any())).thenReturn(responseDto);
 
-		// when
 		ResultActions actions = mockMvc.perform(get("/api/boards")
 			.params(params)
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON)
 		);
 
-		// then
 		actions.andExpect(status().isOk())
 			.andDo(print());
 	}

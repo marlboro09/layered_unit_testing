@@ -95,7 +95,6 @@ class CommentControllerTest {
 	@Test
 	@DisplayName("createComment 테스트")
 	void testCreateComment() throws Exception {
-		// given
 		CommentRequestDto requestDto = fixtureMonkey.giveMeBuilder(CommentRequestDto.class)
 			.setNotNull("contents")
 			.sample();
@@ -103,7 +102,6 @@ class CommentControllerTest {
 		CommentResponseDto responseDto = new CommentResponseDto();
 		when(commentService.createComment(any(CommentRequestDto.class), any(Long.class), any(User.class))).thenReturn(responseDto);
 
-		// when
 		ResultActions actions = mockMvc.perform(post("/api/boards/1/comments")
 			.content(objectMapper.writeValueAsString(requestDto))
 			.contentType(MediaType.APPLICATION_JSON)
@@ -111,7 +109,6 @@ class CommentControllerTest {
 			.principal(mockPrincipal)
 		);
 
-		// then
 		actions.andExpect(status().isOk())
 			.andDo(print());
 	}
@@ -119,7 +116,6 @@ class CommentControllerTest {
 	@Test
 	@DisplayName("updateComment 테스트")
 	void testUpdateComment() throws Exception {
-		// given
 		CommentUpdateRequestDto requestDto = fixtureMonkey.giveMeBuilder(CommentUpdateRequestDto.class)
 			.setNotNull("contents")
 			.sample();
@@ -127,7 +123,6 @@ class CommentControllerTest {
 		CommentResponseDto responseDto = new CommentResponseDto();
 		when(commentService.updateComment(any(Long.class), any(User.class), any(CommentUpdateRequestDto.class))).thenReturn(responseDto);
 
-		// when
 		ResultActions actions = mockMvc.perform(put("/api/boards/1/comments/1")
 			.content(objectMapper.writeValueAsString(requestDto))
 			.contentType(MediaType.APPLICATION_JSON)
@@ -135,7 +130,6 @@ class CommentControllerTest {
 			.principal(mockPrincipal)
 		);
 
-		// then
 		actions.andExpect(status().isOk())
 			.andDo(print());
 	}
@@ -143,14 +137,12 @@ class CommentControllerTest {
 	@Test
 	@DisplayName("deleteComment 테스트")
 	void testDeleteComment() throws Exception {
-		// when
 		ResultActions actions = mockMvc.perform(delete("/api/boards/1/comments/1")
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON)
 			.principal(mockPrincipal)
 		);
 
-		// then
 		actions.andExpect(status().isNoContent())
 			.andDo(print());
 	}
