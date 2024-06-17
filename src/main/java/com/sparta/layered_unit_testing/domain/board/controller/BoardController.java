@@ -57,6 +57,7 @@ public class BoardController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteBoard(@PathVariable("id") Long id,
 		@AuthenticationPrincipal UserDetailsImpl userDetails) {
+		System.out.println("test");
 		boardService.deleteBoard(id, userDetails.getUser());
 		return ResponseEntity.noContent().build();
 	}

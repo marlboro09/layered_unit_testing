@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.sparta.layered_unit_testing.domain.board.entity.Board;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

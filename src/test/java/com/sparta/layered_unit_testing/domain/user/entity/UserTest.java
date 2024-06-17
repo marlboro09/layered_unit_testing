@@ -5,31 +5,49 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.sparta.layered_unit_testing.domain.user.entity.User;
+import com.sparta.layered_unit_testing.domain.user.dto.ProfileRequestDto;
 
 import com.navercorp.fixturemonkey.FixtureMonkey;
-import com.navercorp.fixturemonkey.api.introspector.BuilderArbitraryIntrospector;
 
-public class UserTest {
-	private final FixtureMonkey fixtureMonkey = FixtureMonkey.builder()
-		.objectIntrospector(BuilderArbitraryIntrospector.INSTANCE)
-		.build();
+class UserTest {
+
+	private final FixtureMonkey fixtureMonkey = FixtureMonkey.create();
 
 	@Test
-	@DisplayName("updateProfile() 테스트")
-	void test1() {
+	@DisplayName("nonPasswordProfileUpdate() 테스트 성공")
+	void testNonPasswordProfileUpdate() {
 		// given
-		User user = new User();
-		String name = fixtureMonkey.giveMeOne(String.class);
-		String introduction = fixtureMonkey.giveMeOne(String.class);
-		String password = fixtureMonkey.giveMeOne(String.class);
+		User user = fixtureMonkey.giveMeOne(User.class);
+		ProfileRequestDto requestDto = fixtureMonkey.giveMeOne(ProfileRequestDto.class);
+		String profileImage = fixtureMonkey.giveMeOne(String.class);
 
 		// when
-		user.nonPasswordProfileUpdate(name, introduction, password);
+		user.nonPasswordProfileUpdate(requestDto, profileImage);
 
 		// then
-		assertEquals(name, user.getName());
-		assertEquals(introduction, user.getIntro());
-		assertEquals(password, user.getPassword());
+		assertEquals(requestDto.getName(), user.getName());
+		assertEquals(requestDto.getEmail(), user.getEmail());
+		assertEquals(requestDto.getIntro(), user.getIntro());
+		assertEquals(profileImage, user.getProfileImage());
+	}
+
+	@Test
+	@DisplayName("inPasswordProfileUpdate() 테스트 성공")
+	void testInPasswordProfileUpdate() {
+		// given
+		User user = fixtureMonkey.giveMeOne(User.class);
+		ProfileRequestDto requestDto = fixtureMonkey.giveMeOne(ProfileRequestDto.class);
+		String encodedPasswdDto = fixtureMonkey.giveMeOne(String.class);
+		String profileImage = fixtureMonkey.giveMeOne(String.class);
+
+		// when
+		user.inPasswordProfileUpdate(requestDto, encodedPasswdDto, profileImage);
+
+		// then
+		assertEquals(requestDto.getName(), user.getName());
+		assertEquals(requestDto.getEmail(), user.getEmail());
+		assertEquals(requestDto.getIntro(), user.getIntro());
+		assertEquals(encodedPasswdDto, user.getPassword());
+		assertEquals(profileImage, user.getProfileImage());
 	}
 }
